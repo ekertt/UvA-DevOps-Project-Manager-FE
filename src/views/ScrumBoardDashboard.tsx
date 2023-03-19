@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
+  Card,
   Col,
   Form,
   Input,
@@ -16,15 +17,11 @@ import { SignInUserSession } from '../models/sign-in-user-session';
 import { useParams } from 'react-router-dom';
 import { Project } from '../models/Project';
 import { getProjectById } from '../api/projects';
+import { createTask, getTasksForProject } from '../api/tasks';
+import { Task } from '../models/Task';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
-
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-}
 
 const parseNameFirstLetter = (user: SignInUserSession): string => {
   return user.idToken.payload.given_name.at(0) ?? '';
@@ -40,6 +37,7 @@ const parseName = (user: SignInUserSession): string => {
 const ScrumBoardDashboard: React.FC = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [form] = Form.useForm();
 
   const { user } = useContext(authContext);
   const { project_id } = useParams();
@@ -54,16 +52,36 @@ const ScrumBoardDashboard: React.FC = () => {
     fetchProject();
   }, [project_id]);
 
-  console.log(project);
-
-  const handleCreateTask = (values: any) => {
-    const newTask: Task = {
-      id: tasks.length + 1,
-      title: values.title,
-      description: values.description,
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const tasks = await getTasksForProject(
+        project_id!,
+        user!.idToken.jwtToken
+      );
+      setTasks(tasks);
     };
-    setTasks([...tasks, newTask]);
+
+    fetchTasks();
+  }, [project_id]);
+
+  const handleGetTasks = async () => {
+    const tasks = await getTasksForProject(project_id!, user!.idToken.jwtToken);
+    setTasks(tasks);
+  };
+
+  const handleCreateTask = async (values: any) => {
+    await createTask(
+      project_id!,
+      {
+        title: values.title,
+        description: values.description,
+        state: 'todo',
+      },
+      user!.idToken.jwtToken
+    );
+    form.resetFields();
     setModalVisible(false);
+    await handleGetTasks();
   };
 
   return (
@@ -110,7 +128,13 @@ const ScrumBoardDashboard: React.FC = () => {
               }}
             >
               <Title level={4}>To Do</Title>
-              <div style={{ height: '300px' }}></div>
+              {tasks
+                .filter((task) => task.state === 'todo')
+                .map((task) => (
+                  <Card title={task.title} style={{ marginBottom: '16px' }}>
+                    <p>{task.description}</p>
+                  </Card>
+                ))}
             </div>
           </Col>
           <Col span={8}>
@@ -122,7 +146,13 @@ const ScrumBoardDashboard: React.FC = () => {
               }}
             >
               <Title level={4}>In Progress</Title>
-              <div style={{ height: '300px' }}></div>
+              {tasks
+                .filter((task) => task.state === 'in-progress')
+                .map((task) => (
+                  <Card title={task.title} style={{ marginBottom: '16px' }}>
+                    <p>{task.description}</p>
+                  </Card>
+                ))}
             </div>
           </Col>
           <Col span={8}>
@@ -134,33 +164,55 @@ const ScrumBoardDashboard: React.FC = () => {
               }}
             >
               <Title level={4}>Done</Title>
-              <div style={{ height: '300px' }}></div>
+              {tasks
+                .filter((task) => task.state === 'done')
+                .map((task) => (
+                  <Card title={task.title} style={{ marginBottom: '16px' }}>
+                    <p>{task.description}</p>
+                  </Card>
+                ))}
             </div>
           </Col>
         </Row>
+        <Modal
+          title="Create Project"
+          open={modalVisible}
+          onCancel={() => setModalVisible(false)}
+          footer={null}
+        >
+          <Form form={form} onFinish={handleCreateTask} layout="vertical">
+            <Form.Item
+              name="title"
+              label="Title"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a title for your project',
+                },
+              ]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="description"
+              label="Description"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please enter a description for your project',
+                },
+              ]}
+            >
+              <Input.TextArea />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Create
+              </Button>
+            </Form.Item>
+          </Form>
+        </Modal>
       </Content>
-      <Modal
-        title="Create Task"
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        footer={null}
-      >
-        <Form onFinish={handleCreateTask}>
-          <Form.Item
-            name="title"
-            label="Title"
-            rules={[{ required: true, message: 'Please enter a title' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea />
-          </Form.Item>
-          <Button type="primary" htmlType="submit">
-            Create
-          </Button>
-        </Form>
-      </Modal>
     </Layout>
   );
 };
