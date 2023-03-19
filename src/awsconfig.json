@@ -1,0 +1,24 @@
+{
+  "Auth": {
+    "region": "eu-west-1",
+    "userPoolId": "eu-west-1_ESOmKrJEH",
+    "userPoolWebClientId": "3d5i943ditllju4upg6rsmikk",
+    "mandatorySignIn": false,
+    "cookieStorage": {
+      "domain": "localhost",
+      "path": "/",
+      "expires": 365,
+      "secure": true
+    },
+    "redirectSignIn": "http://localhost:3000",
+    "redirectSignOut": "http://localhost:3000"
+  },
+  "API": {
+    "endpoints": [
+      {
+        "name": "demo",
+        "endpoint": "http://localhost:3000/"
+      }
+    ]
+  }
+}
