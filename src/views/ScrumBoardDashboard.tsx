@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
@@ -13,6 +13,9 @@ import {
 import { PlusOutlined } from '@ant-design/icons';
 import authContext from '../auth/auth-context';
 import { SignInUserSession } from '../models/sign-in-user-session';
+import { useParams } from 'react-router-dom';
+import { Project } from '../models/Project';
+import { getProjectById } from '../api/projects';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -39,6 +42,19 @@ const ScrumBoardDashboard: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
 
   const { user } = useContext(authContext);
+  const { project_id } = useParams();
+  const [project, setProject] = useState<Project | null>(null);
+
+  useEffect(() => {
+    const fetchProject = async () => {
+      const project = await getProjectById(project_id!, user!.idToken.jwtToken);
+      setProject(project);
+    };
+
+    fetchProject();
+  }, [project_id]);
+
+  console.log(project);
 
   const handleCreateTask = (values: any) => {
     const newTask: Task = {
@@ -68,6 +84,9 @@ const ScrumBoardDashboard: React.FC = () => {
                 <span>{parseName(user)}</span>
               </div>
             )}
+          </Col>
+          <Col>
+            <div style={{ fontWeight: 700 }}>{project?.name}</div>
           </Col>
           <Col>
             <Button
