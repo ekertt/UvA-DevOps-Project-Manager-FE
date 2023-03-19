@@ -8,7 +8,6 @@ import {Autha} from "./auth";
 const App: FC = () => (
   <div className="App">
       <Autha/>
-    <ScrumBoardDashboard />
   </div>
 );
 
