@@ -42,17 +42,6 @@ interface ITaskState {
   done: Task[];
 }
 
-const parseNameFirstLetter = (user: SignInUserSession): string => {
-  return user.idToken.payload.given_name.charAt(0) || '';
-};
-
-const parseName = (user: SignInUserSession): string => {
-  const name = user.idToken.payload.given_name;
-  const familyName = user.idToken.payload.family_name;
-
-  return `${name} ${familyName}`;
-};
-
 const ScrumBoardDashboard: React.FC = () => {
   const [tasks, setTasks] = useState<ITaskState>({
     todo: [],
@@ -189,29 +178,12 @@ const ScrumBoardDashboard: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Header style={{ background: '#fff', padding: '0 16px' }}>
-        <Row justify="space-between" align="middle">
-          <Col>
-            {user && (
-              <div>
-                <Avatar
-                  style={{
-                    backgroundColor: '#fde3cf',
-                    marginRight: '16px',
-                  }}
-                >
-                  {parseNameFirstLetter(user)}
-                </Avatar>
-                <span>{parseName(user)}</span>
-              </div>
-            )}
-          </Col>
-          <Col>
-            <Button type="primary" onClick={() => setModalVisible(true)}>
-              <PlusOutlined /> New Task
-            </Button>
-          </Col>
-        </Row>
+      <Header
+        style={{ textAlign: 'right', background: '#fff', padding: '0 16px' }}
+      >
+        <Button type="primary" onClick={() => setModalVisible(true)}>
+          <PlusOutlined /> New Task
+        </Button>
       </Header>
       <Content style={{ padding: '16px' }}>
         {project && (

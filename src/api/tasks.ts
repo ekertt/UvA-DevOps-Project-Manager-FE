@@ -1,7 +1,7 @@
 import { Task } from '../models/Task';
 import { CreateTask } from '../models/Task';
 
-const baseUrl = 'https://tic2b5chf5.execute-api.eu-west-1.amazonaws.com/prod';
+const baseUrl = 'https://pk2kqkbu6l.execute-api.eu-west-1.amazonaws.com/prod';
 
 export const getTasksForProject = async (
   projectId: string,
