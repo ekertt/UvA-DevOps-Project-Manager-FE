@@ -28,5 +28,4 @@ jobs:
           application_name: 'DevOps-Project-Manager'
           environment_name: 'Production'
           version_label: ${{ github.sha }}
-          bucket_name: 'devops-bucket'
-          artifact: 'build'
+          deployment_package: 'build'
