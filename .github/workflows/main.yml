@@ -1,31 +1,27 @@
-name: EB deploy
+name: Deploy main
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    env:
-      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      AWS_DEFAULT_REGION: ${{ secrets.AWS_DEFAULT_REGION }}
     steps:
-      - uses: actions/checkout@v2
-      - name: Install dependencies
-        run: yarn install
-      - name: Build application
-        run: yarn build
-      - name: Install Python 3.9
-        uses: actions/setup-python@v2
+
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Generate deployment package
+        run: zip -r deploy.zip . -x '*.git*'
+
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v21
         with:
-          python-version: 3.9
-      - name: Install EB CLI using pip
-        run: |
-          python -m pip install --upgrade pip
-          pip install awsebcli
-      - name: Init EB CLI
-        run: |
-          eb init --platform ${{secrets.AWS_PLATFORM}} --region ${{secrets.AWS_DEFAULT_REGION }}
-      - name: Deploy to Elastic Beanstalk
-        run: |
-          eb deploy production
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: DevopsProjectManager
+          environment_name: production
+          version_label: 1
+          region: eu-west-1
+          deployment_package: deploy.zip
