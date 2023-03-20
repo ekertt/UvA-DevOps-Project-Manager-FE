@@ -115,7 +115,7 @@ const ScrumBoardDashboard: React.FC = () => {
           task.state = 'todo'
           break;
       }
-      await updateTask(task, user!.idToken.jwtToken);
+      await updateTask(task, user!.idToken.jwtToken, project_id!);
       await handleGetTasks();
     } catch (error) {
       console.log(error);

@@ -36,8 +36,8 @@ export const createTask = async (
   });
 };
 
-export const updateTask = async (task: Task, token: String): Promise<Task> => {
-  const response = await fetch(`${baseUrl}/tasks/${task.id}`, {
+export const updateTask = async (task: Task, token: String, projectId: string): Promise<Task> => {
+  const response = await fetch(`${baseUrl}/projects/${projectId}/tasks/${task.id}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
