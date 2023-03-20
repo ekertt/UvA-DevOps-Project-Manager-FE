@@ -7,17 +7,29 @@ import {
   Form,
   Input,
   Layout,
-  Modal, Popconfirm,
+  Modal,
+  Popconfirm,
   Row,
+  Space,
   Typography,
 } from 'antd';
-import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
+import {
+  DeleteOutlined,
+  LeftOutlined,
+  PlusOutlined,
+  RightOutlined,
+} from '@ant-design/icons';
 import authContext from '../auth/auth-context';
 import { SignInUserSession } from '../models/sign-in-user-session';
 import { useParams } from 'react-router-dom';
 import { Project } from '../models/Project';
-import {deleteProject, getProjectById} from '../api/projects';
-import {createTask, deleteTask, getTasksForProject, updateTask} from '../api/tasks';
+import {deleteProject, getProjectById, updateProject} from '../api/projects';
+import {
+  createTask,
+  deleteTask,
+  getTasksForProject,
+  updateTask,
+} from '../api/tasks';
 import { Task } from '../models/Task';
 
 const { Header, Content } = Layout;
@@ -47,6 +59,8 @@ const ScrumBoardDashboard: React.FC = () => {
     done: [],
   });
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [selectedTask, setSelectedTask] = useState<Project | null>(null);
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [form] = Form.useForm();
 
   const { user } = useContext(authContext);
@@ -102,20 +116,51 @@ const ScrumBoardDashboard: React.FC = () => {
     await handleGetTasks();
   };
 
-  const handleEditTask = async (task: Task) => {
+  const handleUpdateTaskStateLeft = async (task: Task) => {
+    try {
+      switch (task.state) {
+        case 'todo':
+          task.state = 'done';
+          break;
+        case 'in-progress':
+          task.state = 'todo';
+          break;
+        case 'done':
+          task.state = 'in-progress';
+          break;
+      }
+      await updateTask(task, user!.idToken.jwtToken, project_id!);
+      await handleGetTasks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUpdateTaskStateRight = async (task: Task) => {
     try {
       switch (task.state) {
         case 'todo':
           task.state = 'in-progress';
           break;
         case 'in-progress':
-          task.state = 'done'
+          task.state = 'done';
           break;
         case 'done':
-          task.state = 'todo'
+          task.state = 'todo';
           break;
       }
       await updateTask(task, user!.idToken.jwtToken, project_id!);
+      await handleGetTasks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleEditTask = async (task: Task) => {
+    try {
+      await updateTask(task, user!.idToken.jwtToken, project_id!);
+      setSelectedTask(null);
+      setIsEditModalVisible(false);
       await handleGetTasks();
     } catch (error) {
       console.log(error);
@@ -165,19 +210,47 @@ const ScrumBoardDashboard: React.FC = () => {
               <Col span={8}>
                 <Card title="To Do" style={{ height: '100%' }}>
                   {tasks.todo.map((task) => (
-                    <Card key={task.id} title={task.title}>
-                      {task.description}
-                      <Button onClick={() => handleEditTask(task)}>Edit</Button>
-                      <Popconfirm
-                          title="Are you sure you want to delete this task?"
-                          onConfirm={() => handleDeleteTask(task.id)}
-                          okText="Yes"
-                          cancelText="No"
-                      >
-                        <Button danger icon={<DeleteOutlined />}>
-                          Delete
-                        </Button>
-                      </Popconfirm>
+                    <Card
+                      key={task.id}
+                      title={task.title}
+                      extra={
+                        <>
+                          <Button
+                            type="text"
+                            onClick={() => handleUpdateTaskStateLeft(task)}
+                            disabled
+                          >
+                            <LeftOutlined />
+                          </Button>
+                          <Button
+                            type="text"
+                            onClick={() => handleUpdateTaskStateRight(task)}
+                          >
+                            <RightOutlined />
+                          </Button>
+                        </>
+                      }
+                    >
+                      <Space>
+                        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                        {task.description}
+                        <Space.Compact block>
+                          <Button onClick={() => handleEditTask(task)}>
+                            Edit
+                          </Button>
+                          <Popconfirm
+                            title="Are you sure you want to delete this task?"
+                            onConfirm={() => handleDeleteTask(task.id)}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <Button danger icon={<DeleteOutlined />}>
+                              Delete
+                            </Button>
+                          </Popconfirm>
+                        </Space.Compact>
+                          </Space>
+                      </Space>
                     </Card>
                   ))}
                 </Card>
@@ -185,19 +258,46 @@ const ScrumBoardDashboard: React.FC = () => {
               <Col span={8}>
                 <Card title="In Progress" style={{ height: '100%' }}>
                   {tasks['in-progress'].map((task) => (
-                    <Card key={task.id} title={task.title}>
-                      {task.description}
-                      <Button onClick={() => handleEditTask(task)}>Edit</Button>
-                      <Popconfirm
-                          title="Are you sure you want to delete this task?"
-                          onConfirm={() => handleDeleteTask(task.id)}
-                          okText="Yes"
-                          cancelText="No"
-                      >
-                        <Button danger icon={<DeleteOutlined />}>
-                          Delete
-                        </Button>
-                      </Popconfirm>
+                    <Card
+                      key={task.id}
+                      title={task.title}
+                      extra={
+                        <>
+                          <Button
+                            type="text"
+                            onClick={() => handleUpdateTaskStateLeft(task)}
+                          >
+                            <LeftOutlined />
+                          </Button>
+                          <Button
+                            type="text"
+                            onClick={() => handleUpdateTaskStateRight(task)}
+                          >
+                            <RightOutlined />
+                          </Button>
+                        </>
+                      }
+                    >
+                      <Space>
+                        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                        {task.description}
+                        <Space.Compact block>
+                          <Button onClick={() => handleEditTask(task)}>
+                            Edit
+                          </Button>
+                          <Popconfirm
+                            title="Are you sure you want to delete this task?"
+                            onConfirm={() => handleDeleteTask(task.id)}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <Button danger icon={<DeleteOutlined />}>
+                              Delete
+                            </Button>
+                          </Popconfirm>
+                        </Space.Compact>
+                      </Space>
+                      </Space>
                     </Card>
                   ))}
                 </Card>
@@ -205,19 +305,47 @@ const ScrumBoardDashboard: React.FC = () => {
               <Col span={8}>
                 <Card title="Done" style={{ height: '100%' }}>
                   {tasks.done.map((task) => (
-                    <Card key={task.id} title={task.title}>
-                      {task.description}
-                      <Button onClick={() => handleEditTask(task)}>Edit</Button>
-                      <Popconfirm
-                          title="Are you sure you want to delete this task?"
-                          onConfirm={() => handleDeleteTask(task.id)}
-                          okText="Yes"
-                          cancelText="No"
-                      >
-                        <Button danger icon={<DeleteOutlined />}>
-                          Delete
-                        </Button>
-                      </Popconfirm>
+                    <Card
+                      key={task.id}
+                      title={task.title}
+                      extra={
+                        <>
+                          <Button
+                            type="text"
+                            onClick={() => handleUpdateTaskStateLeft(task)}
+                          >
+                            <LeftOutlined />
+                          </Button>
+                          <Button
+                            type="text"
+                            onClick={() => handleUpdateTaskStateRight(task)}
+                            disabled
+                          >
+                            <RightOutlined />
+                          </Button>
+                        </>
+                      }
+                    >
+                      <Space>
+                        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
+                        {task.description}
+                        <Space.Compact block>
+                          <Button onClick={() => handleEditTask(task)}>
+                            Edit
+                          </Button>
+                          <Popconfirm
+                            title="Are you sure you want to delete this task?"
+                            onConfirm={() => handleDeleteTask(task.id)}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <Button danger icon={<DeleteOutlined />}>
+                              Delete
+                            </Button>
+                          </Popconfirm>
+                        </Space.Compact>
+                      </Space>
+                      </Space>
                     </Card>
                   ))}
                 </Card>

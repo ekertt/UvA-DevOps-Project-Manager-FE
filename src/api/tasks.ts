@@ -36,7 +36,11 @@ export const createTask = async (
   });
 };
 
-export const updateTask = async (task: Task, token: String, projectId: string): Promise<void> => {
+export const updateTask = async (
+  task: Task,
+  token: String,
+  projectId: string
+): Promise<void> => {
   await fetch(`${baseUrl}/projects/${projectId}/tasks/${task.id}`, {
     method: 'PUT',
     headers: {
@@ -47,7 +51,11 @@ export const updateTask = async (task: Task, token: String, projectId: string): 
   });
 };
 
-export const deleteTask = async (taskId: string, token: string, projectId: string): Promise<void> => {
+export const deleteTask = async (
+  taskId: string,
+  token: string,
+  projectId: string
+): Promise<void> => {
   await fetch(`${baseUrl}/projects/${projectId}/tasks/${taskId}`, {
     method: 'DELETE',
     headers: {
