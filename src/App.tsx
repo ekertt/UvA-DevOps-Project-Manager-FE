@@ -67,10 +67,7 @@ const App: FC = () => {
               <BrowserRouter>
                 <Routes>
                   <Route path="/" Component={Projects} />
-                  <Route
-                    path="/projects/:project_id"
-                    Component={Tasks}
-                  />
+                  <Route path="/projects/:project_id" Component={Tasks} />
                 </Routes>
               </BrowserRouter>
             )}

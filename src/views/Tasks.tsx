@@ -15,12 +15,13 @@ import {
 } from 'antd';
 import {
   DeleteOutlined,
+  EyeOutlined,
   LeftOutlined,
   PlusOutlined,
   RightOutlined,
 } from '@ant-design/icons';
 import authContext from '../auth/auth-context';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { Project } from '../models/Project';
 import { getProjectById } from '../api/projects';
 import {
@@ -180,9 +181,18 @@ const Tasks: React.FC = () => {
       <Header
         style={{ textAlign: 'right', background: '#fff', padding: '0 16px' }}
       >
-        <Button type="primary" onClick={() => setModalVisible(true)}>
-          <PlusOutlined /> New Task
-        </Button>
+        <Row style={{ justifyContent: 'space-between' }}>
+          <Col>
+            <Link to={`/`}>
+              <Button icon={<LeftOutlined />}>Back</Button>
+            </Link>
+          </Col>
+          <Col>
+            <Button type="primary" onClick={() => setModalVisible(true)}>
+              <PlusOutlined /> New Task
+            </Button>
+          </Col>
+        </Row>
       </Header>
       <Content style={{ padding: '16px' }}>
         {project && (
