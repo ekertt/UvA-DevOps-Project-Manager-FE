@@ -1,5 +1,4 @@
-import { Task } from '../models/Task';
-import { CreateTask } from '../models/Task';
+import {CreateTask, Task} from '../models/Task';
 
 const baseUrl = 'https://pk2kqkbu6l.execute-api.eu-west-1.amazonaws.com/prod';
 
@@ -17,8 +16,7 @@ export const getTasksForProject = async (
   if (!response.ok) {
     throw new Error(`Failed to fetch tasks for project with id ${projectId}`);
   }
-  const tasks = (await response.json()) as Task[];
-  return tasks;
+  return (await response.json()) as Task[];
 };
 
 export const createTask = async (

@@ -1,6 +1,6 @@
-import { Project } from '../models/Project';
-import { CreateProject } from '../models/CreateProject';
-import { UpdateProject } from '../models/UpdateProject';
+import {Project} from '../models/Project';
+import {CreateProject} from '../models/CreateProject';
+import {UpdateProject} from '../models/UpdateProject';
 
 const baseUrl = 'https://pk2kqkbu6l.execute-api.eu-west-1.amazonaws.com/prod';
 
