@@ -3,6 +3,13 @@ export interface Task {
   projectId: string;
   title: string;
   description: string;
+  state: string;
   dateTime: string;
   createdBy: string;
+}
+
+export interface CreateTask {
+  title: string;
+  description: string;
+  state: string;
 }

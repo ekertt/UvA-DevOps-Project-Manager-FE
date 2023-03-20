@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {
   Avatar,
   Button,
+  Card,
   Col,
   Form,
   Input,
@@ -16,18 +17,20 @@ import { SignInUserSession } from '../models/sign-in-user-session';
 import { useParams } from 'react-router-dom';
 import { Project } from '../models/Project';
 import { getProjectById } from '../api/projects';
+import { createTask, getTasksForProject } from '../api/tasks';
+import { Task } from '../models/Task';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
 
-interface Task {
-  id: number;
-  title: string;
-  description: string;
+interface ITaskState {
+  todo: Task[];
+  'in-progress': Task[];
+  done: Task[];
 }
 
 const parseNameFirstLetter = (user: SignInUserSession): string => {
-  return user.idToken.payload.given_name.at(0) ?? '';
+  return user.idToken.payload.given_name.charAt(0) || '';
 };
 
 const parseName = (user: SignInUserSession): string => {
@@ -38,11 +41,16 @@ const parseName = (user: SignInUserSession): string => {
 };
 
 const ScrumBoardDashboard: React.FC = () => {
-  const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<ITaskState>({
+    todo: [],
+    'in-progress': [],
+    done: [],
+  });
   const [modalVisible, setModalVisible] = useState<boolean>(false);
+  const [form] = Form.useForm();
 
   const { user } = useContext(authContext);
-  const { project_id } = useParams();
+  const { project_id } = useParams<{ project_id: string }>();
   const [project, setProject] = useState<Project | null>(null);
 
   useEffect(() => {
@@ -52,18 +60,46 @@ const ScrumBoardDashboard: React.FC = () => {
     };
 
     fetchProject();
-  }, [project_id]);
+  }, [project_id, user]);
 
-  console.log(project);
-
-  const handleCreateTask = (values: any) => {
-    const newTask: Task = {
-      id: tasks.length + 1,
-      title: values.title,
-      description: values.description,
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const tasks = await getTasksForProject(
+        project_id!,
+        user!.idToken.jwtToken
+      );
+      setTasks({
+        todo: tasks.filter((task) => task.state === 'todo'),
+        'in-progress': tasks.filter((task) => task.state === 'in-progress'),
+        done: tasks.filter((task) => task.state === 'done'),
+      });
     };
-    setTasks([...tasks, newTask]);
+
+    fetchTasks();
+  }, [project_id, user]);
+
+  const handleGetTasks = async () => {
+    const tasks = await getTasksForProject(project_id!, user!.idToken.jwtToken);
+    setTasks({
+      todo: tasks.filter((task) => task.state === 'todo'),
+      'in-progress': tasks.filter((task) => task.state === 'in-progress'),
+      done: tasks.filter((task) => task.state === 'done'),
+    });
+  };
+
+  const handleCreateTask = async (values: any) => {
+    await createTask(
+      project_id!,
+      {
+        title: values.title,
+        description: values.description,
+        state: 'todo',
+      },
+      user!.idToken.jwtToken
+    );
+    form.resetFields();
     setModalVisible(false);
+    await handleGetTasks();
   };
 
   return (
@@ -76,7 +112,7 @@ const ScrumBoardDashboard: React.FC = () => {
                 <Avatar
                   style={{
                     backgroundColor: '#fde3cf',
-                    color: '#f56a00',
+                    marginRight: '16px',
                   }}
                 >
                   {parseNameFirstLetter(user)}
@@ -86,81 +122,79 @@ const ScrumBoardDashboard: React.FC = () => {
             )}
           </Col>
           <Col>
-            <div style={{ fontWeight: 700 }}>{project?.name}</div>
-          </Col>
-          <Col>
-            <Button
-              type="primary"
-              icon={<PlusOutlined />}
-              onClick={() => setModalVisible(true)}
-            >
-              Create Task
+            <Button type="primary" onClick={() => setModalVisible(true)}>
+              <PlusOutlined /> New Task
             </Button>
           </Col>
         </Row>
       </Header>
       <Content style={{ padding: '16px' }}>
-        <Row gutter={[16, 16]}>
-          <Col span={8}>
-            <div
-              style={{
-                background: '#fff',
-                padding: '16px',
-                borderRadius: '4px',
-              }}
+        {project && (
+          <>
+            <Title level={3}>{project.name}</Title>
+            <Row gutter={[16, 16]}>
+              <Col span={8}>
+                <Card title="To Do" style={{ height: '100%' }}>
+                  {tasks.todo.map((task) => (
+                    <Card key={task.id} title={task.title}>
+                      {task.description}
+                    </Card>
+                  ))}
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card title="In Progress" style={{ height: '100%' }}>
+                  {tasks['in-progress'].map((task) => (
+                    <Card key={task.id} title={task.title}>
+                      {task.description}
+                    </Card>
+                  ))}
+                </Card>
+              </Col>
+              <Col span={8}>
+                <Card title="Done" style={{ height: '100%' }}>
+                  {tasks.done.map((task) => (
+                    <Card key={task.id} title={task.title}>
+                      {task.description}
+                    </Card>
+                  ))}
+                </Card>
+              </Col>
+            </Row>
+          </>
+        )}
+        <Modal
+          title="New Task"
+          visible={modalVisible}
+          onCancel={() => setModalVisible(false)}
+          onOk={form.submit}
+        >
+          <Form form={form} onFinish={handleCreateTask}>
+            <Form.Item
+              name="title"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input a title for the task!',
+                },
+              ]}
             >
-              <Title level={4}>To Do</Title>
-              <div style={{ height: '300px' }}></div>
-            </div>
-          </Col>
-          <Col span={8}>
-            <div
-              style={{
-                background: '#fff',
-                padding: '16px',
-                borderRadius: '4px',
-              }}
+              <Input placeholder="Title" />
+            </Form.Item>
+            <Form.Item
+              name="description"
+              rules={[
+                {
+                  required: true,
+                  message: 'Please input a description for the task!',
+                },
+              ]}
             >
-              <Title level={4}>In Progress</Title>
-              <div style={{ height: '300px' }}></div>
-            </div>
-          </Col>
-          <Col span={8}>
-            <div
-              style={{
-                background: '#fff',
-                padding: '16px',
-                borderRadius: '4px',
-              }}
-            >
-              <Title level={4}>Done</Title>
-              <div style={{ height: '300px' }}></div>
-            </div>
-          </Col>
-        </Row>
+              <Input.TextArea placeholder="Description" />
+            </Form.Item>
+          </Form>
+        </Modal>
       </Content>
-      <Modal
-        title="Create Task"
-        open={modalVisible}
-        onCancel={() => setModalVisible(false)}
-        footer={null}
-      >
-        <Form onFinish={handleCreateTask}>
-          <Form.Item
-            name="title"
-            label="Title"
-            rules={[{ required: true, message: 'Please enter a title' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea />
-          </Form.Item>
-          <Button type="primary" htmlType="submit">
-            Create
-          </Button>
-        </Form>
-      </Modal>
     </Layout>
   );
 };
