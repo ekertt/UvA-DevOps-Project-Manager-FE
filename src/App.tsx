@@ -7,7 +7,7 @@ import authContext from './auth/auth-context';
 import { SignInUserSession } from './models/sign-in-user-session';
 import { Projects } from './views/Projects';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import ScrumBoardDashboard from './views/ScrumBoardDashboard';
+import Tasks from './views/Tasks';
 import { Avatar, Col, Layout, Menu, Row } from 'antd';
 import { NotAuthenticated } from './views/NotAuthenticated';
 
@@ -69,7 +69,7 @@ const App: FC = () => {
                   <Route path="/" Component={Projects} />
                   <Route
                     path="/projects/:project_id"
-                    Component={ScrumBoardDashboard}
+                    Component={Tasks}
                   />
                 </Routes>
               </BrowserRouter>

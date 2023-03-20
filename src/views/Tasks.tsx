@@ -20,7 +20,6 @@ import {
   RightOutlined,
 } from '@ant-design/icons';
 import authContext from '../auth/auth-context';
-import { SignInUserSession } from '../models/sign-in-user-session';
 import { useParams } from 'react-router-dom';
 import { Project } from '../models/Project';
 import { getProjectById } from '../api/projects';
@@ -42,7 +41,7 @@ interface ITaskState {
   done: Task[];
 }
 
-const ScrumBoardDashboard: React.FC = () => {
+const Tasks: React.FC = () => {
   const [tasks, setTasks] = useState<ITaskState>({
     todo: [],
     'in-progress': [],
@@ -397,4 +396,4 @@ const ScrumBoardDashboard: React.FC = () => {
   );
 };
 
-export default ScrumBoardDashboard;
+export default Tasks;
