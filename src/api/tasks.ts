@@ -1,4 +1,4 @@
-import {CreateTask, Task} from '../models/Task';
+import { CreateTask, Task } from '../models/Task';
 
 const baseUrl = 'https://pk2kqkbu6l.execute-api.eu-west-1.amazonaws.com/prod';
 
