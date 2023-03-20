@@ -7,17 +7,17 @@ import {
   Form,
   Input,
   Layout,
-  Modal,
+  Modal, Popconfirm,
   Row,
   Typography,
 } from 'antd';
-import { PlusOutlined } from '@ant-design/icons';
+import {DeleteOutlined, PlusOutlined} from '@ant-design/icons';
 import authContext from '../auth/auth-context';
 import { SignInUserSession } from '../models/sign-in-user-session';
 import { useParams } from 'react-router-dom';
 import { Project } from '../models/Project';
-import { getProjectById } from '../api/projects';
-import { createTask, getTasksForProject, updateTask } from '../api/tasks';
+import {deleteProject, getProjectById} from '../api/projects';
+import {createTask, deleteTask, getTasksForProject, updateTask} from '../api/tasks';
 import { Task } from '../models/Task';
 
 const { Header, Content } = Layout;
@@ -122,6 +122,15 @@ const ScrumBoardDashboard: React.FC = () => {
     }
   };
 
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+      await deleteTask(taskId, user!.idToken.jwtToken, project_id!);
+      await handleGetTasks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header style={{ background: '#fff', padding: '0 16px' }}>
@@ -158,9 +167,17 @@ const ScrumBoardDashboard: React.FC = () => {
                   {tasks.todo.map((task) => (
                     <Card key={task.id} title={task.title}>
                       {task.description}
-                      <Button onClick={() => handleEditTask(task)}>
-                        OULEh
-                      </Button>
+                      <Button onClick={() => handleEditTask(task)}>Edit</Button>
+                      <Popconfirm
+                          title="Are you sure you want to delete this task?"
+                          onConfirm={() => handleDeleteTask(task.id)}
+                          okText="Yes"
+                          cancelText="No"
+                      >
+                        <Button danger icon={<DeleteOutlined />}>
+                          Delete
+                        </Button>
+                      </Popconfirm>
                     </Card>
                   ))}
                 </Card>
@@ -170,6 +187,17 @@ const ScrumBoardDashboard: React.FC = () => {
                   {tasks['in-progress'].map((task) => (
                     <Card key={task.id} title={task.title}>
                       {task.description}
+                      <Button onClick={() => handleEditTask(task)}>Edit</Button>
+                      <Popconfirm
+                          title="Are you sure you want to delete this task?"
+                          onConfirm={() => handleDeleteTask(task.id)}
+                          okText="Yes"
+                          cancelText="No"
+                      >
+                        <Button danger icon={<DeleteOutlined />}>
+                          Delete
+                        </Button>
+                      </Popconfirm>
                     </Card>
                   ))}
                 </Card>
@@ -179,6 +207,17 @@ const ScrumBoardDashboard: React.FC = () => {
                   {tasks.done.map((task) => (
                     <Card key={task.id} title={task.title}>
                       {task.description}
+                      <Button onClick={() => handleEditTask(task)}>Edit</Button>
+                      <Popconfirm
+                          title="Are you sure you want to delete this task?"
+                          onConfirm={() => handleDeleteTask(task.id)}
+                          okText="Yes"
+                          cancelText="No"
+                      >
+                        <Button danger icon={<DeleteOutlined />}>
+                          Delete
+                        </Button>
+                      </Popconfirm>
                     </Card>
                   ))}
                 </Card>

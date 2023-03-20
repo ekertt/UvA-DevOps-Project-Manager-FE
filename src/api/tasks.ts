@@ -36,8 +36,8 @@ export const createTask = async (
   });
 };
 
-export const updateTask = async (task: Task, token: String, projectId: string): Promise<Task> => {
-  const response = await fetch(`${baseUrl}/projects/${projectId}/tasks/${task.id}`, {
+export const updateTask = async (task: Task, token: String, projectId: string): Promise<void> => {
+  await fetch(`${baseUrl}/projects/${projectId}/tasks/${task.id}`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -45,21 +45,14 @@ export const updateTask = async (task: Task, token: String, projectId: string): 
     },
     body: JSON.stringify(task),
   });
-  if (!response.ok) {
-    throw new Error(`Failed to update task with id ${task.id}`);
-  }
-  const updatedTask = (await response.json()) as Task;
-  return updatedTask;
 };
 
-export const deleteTask = async (taskId: number): Promise<void> => {
-  const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
+export const deleteTask = async (taskId: string, token: string, projectId: string): Promise<void> => {
+  await fetch(`${baseUrl}/projects/${projectId}/tasks/${taskId}`, {
     method: 'DELETE',
     headers: {
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   });
-  if (!response.ok) {
-    throw new Error(`Failed to delete task with id ${taskId}`);
-  }
 };
