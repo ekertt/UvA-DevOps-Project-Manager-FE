@@ -1,14 +1,14 @@
-import type { FC } from 'react';
-import React, { useState } from 'react';
+import type {FC} from 'react';
+import React, {useState} from 'react';
 import 'antd/dist/reset.css';
 import './App.css';
-import { Login } from './views/Login';
+import {Login} from './views/Login';
 import authContext from './auth/auth-context';
-import { SignInUserSession } from './models/sign-in-user-session';
-import { Projects } from './views/Projects';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { Avatar, Col, Layout, Menu, Row } from 'antd';
-import { NotAuthenticated } from './views/NotAuthenticated';
+import {SignInUserSession} from './models/sign-in-user-session';
+import {Projects} from './views/Projects';
+import {BrowserRouter, Route, Routes} from 'react-router-dom';
+import {Avatar, Col, Layout, Menu, Row} from 'antd';
+import {NotAuthenticated} from './views/NotAuthenticated';
 import Tasks from './views/Tasks';
 
 const { Header, Content } = Layout;
@@ -59,7 +59,7 @@ const App: FC = () => {
             </Row>
           </Header>
           <Content
-            style={{ backgroundColor: 'white', padding: '0 50px', bottom: 0 }}
+            style={{ padding: '0 50px', bottom: 0 }}
           >
             {!user ? (
               <NotAuthenticated /> // TODO: Style page which shows that you aren't logged in
