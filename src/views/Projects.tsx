@@ -1,4 +1,4 @@
-import { FC, useContext, useEffect, useState } from 'react';
+import { FC, useCallback, useContext, useEffect, useState } from 'react';
 import { Button, List, Modal, Popconfirm, Space, Typography } from 'antd';
 import {
   DeleteOutlined,
@@ -46,12 +46,12 @@ export const Projects: FC = () => {
     await handleGetProjects();
   };
 
-  const handleGetProjects = async () => {
+  const handleGetProjects = useCallback(async () => {
     setIsLoading(true);
     const projects = await getProjects(user!.idToken.jwtToken);
     setProjects(projects);
     setIsLoading(false);
-  };
+  }, [setIsLoading, setProjects, user]);
 
   const handleDeleteProject = async (projectId: string) => {
     await deleteProject(projectId, user!.idToken.jwtToken);
@@ -60,7 +60,7 @@ export const Projects: FC = () => {
 
   useEffect(() => {
     handleGetProjects();
-  }, []);
+  }, [handleGetProjects]);
 
   return (
     <div style={{ margin: '24px' }}>

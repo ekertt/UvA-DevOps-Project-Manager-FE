@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
-  Avatar,
   Button,
   Card,
   Col,
@@ -15,7 +14,6 @@ import {
 } from 'antd';
 import {
   DeleteOutlined,
-  EyeOutlined,
   LeftOutlined,
   PlusOutlined,
   RightOutlined,
@@ -51,8 +49,6 @@ const Tasks: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setEditModalVisibility] = useState<boolean>(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const [isCreateModalVisible, setCreateModalVisibility] =
-    useState<boolean>(false);
   const [form] = Form.useForm();
 
   const { user } = useContext(authContext);
@@ -84,10 +80,6 @@ const Tasks: React.FC = () => {
     fetchTasks();
   }, [project_id, user]);
 
-  const handleOpenCreateModal = () => {
-    setCreateModalVisibility(true);
-  };
-
   const handleOpenEditModal = (task: Task) => {
     setSelectedTask(task);
     setEditModalVisibility(true);
@@ -95,7 +87,6 @@ const Tasks: React.FC = () => {
 
   const handleCloseModal = () => {
     setEditModalVisibility(false);
-    setCreateModalVisibility(false);
   };
 
   const handleGetTasks = async () => {
@@ -282,7 +273,7 @@ const Tasks: React.FC = () => {
                         >
                           {task.description}
                           <Space.Compact block>
-                            <Button onClick={handleOpenCreateModal}>
+                            <Button onClick={() => handleOpenEditModal}>
                               Edit
                             </Button>
                             <Popconfirm
@@ -334,7 +325,7 @@ const Tasks: React.FC = () => {
                         >
                           {task.description}
                           <Space.Compact block>
-                            <Button onClick={handleOpenCreateModal}>
+                            <Button onClick={() => handleOpenEditModal}>
                               Edit
                             </Button>
                             <Popconfirm
