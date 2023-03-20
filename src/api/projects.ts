@@ -1,41 +1,76 @@
-import axios, { AxiosResponse } from 'axios';
 import { Project } from '../models/Project';
+import { CreateProject } from '../models/CreateProject';
+import { UpdateProject } from '../models/UpdateProject';
 
-const baseUrl = '<<API_URL>>';
+const baseUrl = 'https://tic2b5chf5.execute-api.eu-west-1.amazonaws.com/prod';
 
-export const getProjects = async (): Promise<Project[]> => {
-  const response: AxiosResponse<Project[]> = await axios.get(
-    `${baseUrl}/projects`
-  );
-  return response.data;
+export const getProjects = (token: string): Promise<Project[]> => {
+  return fetch(`${baseUrl}/projects`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.json() as Promise<Project[]>;
+  });
 };
 
-export const getProjectById = async (projectId: number): Promise<Project> => {
-  const response: AxiosResponse<Project> = await axios.get(
-    `${baseUrl}/projects/${projectId}`
-  );
-  return response.data;
+export const getProjectById = (
+  projectId: string,
+  token: string
+): Promise<Project> => {
+  return fetch(`${baseUrl}/projects/${projectId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    return response.json() as Promise<Project>;
+  });
 };
 
-export const createProject = async (project: Project): Promise<Project> => {
-  const response: AxiosResponse<Project> = await axios.post(
-    `${baseUrl}/projects`,
-    project
-  );
-  return response.data;
+export const createProject = async (
+  project: CreateProject,
+  token: string
+): Promise<void> => {
+  await fetch(`${baseUrl}/projects`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(project),
+  });
 };
 
 export const updateProject = async (
-  projectId: number,
-  project: Project
-): Promise<Project> => {
-  const response: AxiosResponse<Project> = await axios.put(
-    `${baseUrl}/projects/${projectId}`,
-    project
-  );
-  return response.data;
+  project: UpdateProject,
+  token: string
+): Promise<void> => {
+  await fetch(`${baseUrl}/projects/${project.id}`, {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      name: project.name,
+      description: project.description,
+    }),
+  });
 };
 
-export const deleteProject = async (projectId: number): Promise<void> => {
-  await axios.delete(`${baseUrl}/projects/${projectId}`);
+export const deleteProject = async (
+  projectId: string,
+  token: string
+): Promise<void> => {
+  await fetch(`${baseUrl}/projects/${projectId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+  });
 };
