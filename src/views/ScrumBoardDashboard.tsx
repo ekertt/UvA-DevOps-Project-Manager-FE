@@ -23,7 +23,7 @@ import authContext from '../auth/auth-context';
 import { SignInUserSession } from '../models/sign-in-user-session';
 import { useParams } from 'react-router-dom';
 import { Project } from '../models/Project';
-import {deleteProject, getProjectById, updateProject} from '../api/projects';
+import { getProjectById } from '../api/projects';
 import {
   createTask,
   deleteTask,
@@ -31,6 +31,7 @@ import {
   updateTask,
 } from '../api/tasks';
 import { Task } from '../models/Task';
+import { EditTaskModal } from './edit-task-modal';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -59,8 +60,10 @@ const ScrumBoardDashboard: React.FC = () => {
     done: [],
   });
   const [modalVisible, setModalVisible] = useState<boolean>(false);
-  const [selectedTask, setSelectedTask] = useState<Project | null>(null);
-  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isEditModalVisible, setEditModalVisibility] = useState<boolean>(false);
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isCreateModalVisible, setCreateModalVisibility] =
+    useState<boolean>(false);
   const [form] = Form.useForm();
 
   const { user } = useContext(authContext);
@@ -91,6 +94,20 @@ const ScrumBoardDashboard: React.FC = () => {
 
     fetchTasks();
   }, [project_id, user]);
+
+  const handleOpenCreateModal = () => {
+    setCreateModalVisibility(true);
+  };
+
+  const handleOpenEditModal = (task: Task) => {
+    setSelectedTask(task);
+    setEditModalVisibility(true);
+  };
+
+  const handleCloseModal = () => {
+    setEditModalVisibility(false);
+    setCreateModalVisibility(false);
+  };
 
   const handleGetTasks = async () => {
     const tasks = await getTasksForProject(project_id!, user!.idToken.jwtToken);
@@ -156,15 +173,9 @@ const ScrumBoardDashboard: React.FC = () => {
     }
   };
 
-  const handleEditTask = async (task: Task) => {
-    try {
-      await updateTask(task, user!.idToken.jwtToken, project_id!);
-      setSelectedTask(null);
-      setIsEditModalVisible(false);
-      await handleGetTasks();
-    } catch (error) {
-      console.log(error);
-    }
+  const handleCreateUpdateModal = async () => {
+    handleCloseModal();
+    await handleGetTasks();
   };
 
   const handleDeleteTask = async (taskId: string) => {
@@ -232,24 +243,28 @@ const ScrumBoardDashboard: React.FC = () => {
                       }
                     >
                       <Space>
-                        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                        {task.description}
-                        <Space.Compact block>
-                          <Button onClick={() => handleEditTask(task)}>
-                            Edit
-                          </Button>
-                          <Popconfirm
-                            title="Are you sure you want to delete this task?"
-                            onConfirm={() => handleDeleteTask(task.id)}
-                            okText="Yes"
-                            cancelText="No"
-                          >
-                            <Button danger icon={<DeleteOutlined />}>
-                              Delete
+                        <Space
+                          direction="vertical"
+                          size="middle"
+                          style={{ display: 'flex' }}
+                        >
+                          {task.description}
+                          <Space.Compact block>
+                            <Button onClick={() => handleOpenEditModal(task)}>
+                              Edit
                             </Button>
-                          </Popconfirm>
-                        </Space.Compact>
-                          </Space>
+                            <Popconfirm
+                              title="Are you sure you want to delete this task?"
+                              onConfirm={() => handleDeleteTask(task.id)}
+                              okText="Yes"
+                              cancelText="No"
+                            >
+                              <Button danger icon={<DeleteOutlined />}>
+                                Delete
+                              </Button>
+                            </Popconfirm>
+                          </Space.Compact>
+                        </Space>
                       </Space>
                     </Card>
                   ))}
@@ -279,24 +294,28 @@ const ScrumBoardDashboard: React.FC = () => {
                       }
                     >
                       <Space>
-                        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                        {task.description}
-                        <Space.Compact block>
-                          <Button onClick={() => handleEditTask(task)}>
-                            Edit
-                          </Button>
-                          <Popconfirm
-                            title="Are you sure you want to delete this task?"
-                            onConfirm={() => handleDeleteTask(task.id)}
-                            okText="Yes"
-                            cancelText="No"
-                          >
-                            <Button danger icon={<DeleteOutlined />}>
-                              Delete
+                        <Space
+                          direction="vertical"
+                          size="middle"
+                          style={{ display: 'flex' }}
+                        >
+                          {task.description}
+                          <Space.Compact block>
+                            <Button onClick={handleOpenCreateModal}>
+                              Edit
                             </Button>
-                          </Popconfirm>
-                        </Space.Compact>
-                      </Space>
+                            <Popconfirm
+                              title="Are you sure you want to delete this task?"
+                              onConfirm={() => handleDeleteTask(task.id)}
+                              okText="Yes"
+                              cancelText="No"
+                            >
+                              <Button danger icon={<DeleteOutlined />}>
+                                Delete
+                              </Button>
+                            </Popconfirm>
+                          </Space.Compact>
+                        </Space>
                       </Space>
                     </Card>
                   ))}
@@ -327,24 +346,28 @@ const ScrumBoardDashboard: React.FC = () => {
                       }
                     >
                       <Space>
-                        <Space direction="vertical" size="middle" style={{ display: 'flex' }}>
-                        {task.description}
-                        <Space.Compact block>
-                          <Button onClick={() => handleEditTask(task)}>
-                            Edit
-                          </Button>
-                          <Popconfirm
-                            title="Are you sure you want to delete this task?"
-                            onConfirm={() => handleDeleteTask(task.id)}
-                            okText="Yes"
-                            cancelText="No"
-                          >
-                            <Button danger icon={<DeleteOutlined />}>
-                              Delete
+                        <Space
+                          direction="vertical"
+                          size="middle"
+                          style={{ display: 'flex' }}
+                        >
+                          {task.description}
+                          <Space.Compact block>
+                            <Button onClick={handleOpenCreateModal}>
+                              Edit
                             </Button>
-                          </Popconfirm>
-                        </Space.Compact>
-                      </Space>
+                            <Popconfirm
+                              title="Are you sure you want to delete this task?"
+                              onConfirm={() => handleDeleteTask(task.id)}
+                              okText="Yes"
+                              cancelText="No"
+                            >
+                              <Button danger icon={<DeleteOutlined />}>
+                                Delete
+                              </Button>
+                            </Popconfirm>
+                          </Space.Compact>
+                        </Space>
                       </Space>
                     </Card>
                   ))}
@@ -383,6 +406,19 @@ const ScrumBoardDashboard: React.FC = () => {
               <Input.TextArea placeholder="Description" />
             </Form.Item>
           </Form>
+        </Modal>
+        <Modal
+          title="Edit Task"
+          open={isEditModalVisible}
+          onCancel={handleCloseModal}
+          onOk={handleCloseModal}
+          footer={null}
+          destroyOnClose
+        >
+          <EditTaskModal
+            task={selectedTask}
+            onUpdate={handleCreateUpdateModal}
+          />
         </Modal>
       </Content>
     </Layout>
