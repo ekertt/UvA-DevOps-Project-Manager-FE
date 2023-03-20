@@ -2,7 +2,7 @@ import { Project } from '../models/Project';
 import { CreateProject } from '../models/CreateProject';
 import { UpdateProject } from '../models/UpdateProject';
 
-const baseUrl = 'https://tic2b5chf5.execute-api.eu-west-1.amazonaws.com/prod';
+const baseUrl = 'https://pk2kqkbu6l.execute-api.eu-west-1.amazonaws.com/prod';
 
 export const getProjects = (token: string): Promise<Project[]> => {
   return fetch(`${baseUrl}/projects`, {

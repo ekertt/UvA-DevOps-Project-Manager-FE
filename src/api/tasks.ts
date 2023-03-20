@@ -1,7 +1,7 @@
 import { Task } from '../models/Task';
 import { CreateTask } from '../models/Task';
 
-const baseUrl = 'https://tic2b5chf5.execute-api.eu-west-1.amazonaws.com/prod';
+const baseUrl = 'https://pk2kqkbu6l.execute-api.eu-west-1.amazonaws.com/prod';
 
 export const getTasksForProject = async (
   projectId: string,
@@ -36,29 +36,31 @@ export const createTask = async (
   });
 };
 
-export const updateTask = async (taskId: number, task: Task): Promise<Task> => {
-  const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
+export const updateTask = async (
+  task: Task,
+  token: String,
+  projectId: string
+): Promise<void> => {
+  await fetch(`${baseUrl}/projects/${projectId}/tasks/${task.id}`, {
     method: 'PUT',
     headers: {
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(task),
   });
-  if (!response.ok) {
-    throw new Error(`Failed to update task with id ${taskId}`);
-  }
-  const updatedTask = (await response.json()) as Task;
-  return updatedTask;
 };
 
-export const deleteTask = async (taskId: number): Promise<void> => {
-  const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
+export const deleteTask = async (
+  taskId: string,
+  token: string,
+  projectId: string
+): Promise<void> => {
+  await fetch(`${baseUrl}/projects/${projectId}/tasks/${taskId}`, {
     method: 'DELETE',
     headers: {
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
   });
-  if (!response.ok) {
-    throw new Error(`Failed to delete task with id ${taskId}`);
-  }
 };

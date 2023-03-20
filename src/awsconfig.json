@@ -1,8 +1,8 @@
 {
   "Auth": {
     "region": "eu-west-1",
-    "userPoolId": "eu-west-1_ESOmKrJEH",
-    "userPoolWebClientId": "3d5i943ditllju4upg6rsmikk",
+    "userPoolId": "eu-west-1_EvjxRSWkg",
+    "userPoolWebClientId": "63pt4gqlvh725e9592209phluk",
     "mandatorySignIn": false,
     "cookieStorage": {
       "domain": "localhost",

@@ -6,12 +6,13 @@ import awsauth from '../awsauth.json';
 import { Button } from 'antd';
 import authContext from '../auth/auth-context';
 import { SignInUserSession } from '../models/sign-in-user-session';
+import { LoginOutlined, LogoutOutlined } from '@ant-design/icons';
 
 Amplify.configure(awsconfig);
 Auth.configure({ oauth: awsauth });
 
 export const Login: FC = () => {
-  const { setUser } = useContext(authContext);
+  const { user, setUser } = useContext(authContext);
 
   useEffect(
     () =>
@@ -32,9 +33,19 @@ export const Login: FC = () => {
 
   return (
     <>
-      <Button type="primary" onClick={() => Auth.federatedSignIn()}>
-        Sign in/Up
-      </Button>
+      <div style={{ textAlign: 'right' }}>
+        {!user ? (
+          <Button type="primary" onClick={() => Auth.federatedSignIn()}>
+            <LoginOutlined />
+            Sign in/Up
+          </Button>
+        ) : (
+          <Button type="primary" onClick={() => Auth.signOut()}>
+            <LogoutOutlined />
+            Sign out
+          </Button>
+        )}
+      </div>
     </>
   );
 };
