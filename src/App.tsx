@@ -7,11 +7,11 @@ import authContext from './auth/auth-context';
 import { SignInUserSession } from './models/sign-in-user-session';
 import { Projects } from './views/Projects';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Tasks from './views/Tasks';
 import { Avatar, Col, Layout, Menu, Row } from 'antd';
 import { NotAuthenticated } from './views/NotAuthenticated';
+import Tasks from './views/Tasks';
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
 
 const App: FC = () => {
   const [user, setUser] = useState<SignInUserSession | undefined>(undefined);
