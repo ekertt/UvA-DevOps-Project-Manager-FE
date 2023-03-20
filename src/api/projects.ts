@@ -1,4 +1,6 @@
 import { Project } from '../models/Project';
+import { CreateProject } from '../models/CreateProject';
+import { UpdateProject } from '../models/UpdateProject';
 
 const baseUrl = 'https://tic2b5chf5.execute-api.eu-west-1.amazonaws.com/prod';
 
@@ -30,7 +32,7 @@ export const getProjectById = (
 };
 
 export const createProject = async (
-  project: { name: string; description: string },
+  project: CreateProject,
   token: string
 ): Promise<void> => {
   await fetch(`${baseUrl}/projects`, {
@@ -44,7 +46,7 @@ export const createProject = async (
 };
 
 export const updateProject = async (
-  project: { id: string; name: string; description: string },
+  project: UpdateProject,
   token: string
 ): Promise<void> => {
   await fetch(`${baseUrl}/projects/${project.id}`, {
