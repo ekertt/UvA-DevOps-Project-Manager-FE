@@ -36,16 +36,17 @@ export const createTask = async (
   });
 };
 
-export const updateTask = async (taskId: number, task: Task): Promise<Task> => {
-  const response = await fetch(`${baseUrl}/tasks/${taskId}`, {
+export const updateTask = async (task: Task, token: String): Promise<Task> => {
+  const response = await fetch(`${baseUrl}/tasks/${task.id}`, {
     method: 'PUT',
     headers: {
+      Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     body: JSON.stringify(task),
   });
   if (!response.ok) {
-    throw new Error(`Failed to update task with id ${taskId}`);
+    throw new Error(`Failed to update task with id ${task.id}`);
   }
   const updatedTask = (await response.json()) as Task;
   return updatedTask;

@@ -17,7 +17,7 @@ import { SignInUserSession } from '../models/sign-in-user-session';
 import { useParams } from 'react-router-dom';
 import { Project } from '../models/Project';
 import { getProjectById } from '../api/projects';
-import { createTask, getTasksForProject } from '../api/tasks';
+import { createTask, getTasksForProject, updateTask } from '../api/tasks';
 import { Task } from '../models/Task';
 
 const { Header, Content } = Layout;
@@ -102,6 +102,26 @@ const ScrumBoardDashboard: React.FC = () => {
     await handleGetTasks();
   };
 
+  const handleEditTask = async (task: Task) => {
+    try {
+      switch (task.state) {
+        case 'todo':
+          task.state = 'in-progress';
+          break;
+        case 'in-progress':
+          task.state = 'done'
+          break;
+        case 'done':
+          task.state = 'todo'
+          break;
+      }
+      await updateTask(task, user!.idToken.jwtToken);
+      await handleGetTasks();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header style={{ background: '#fff', padding: '0 16px' }}>
@@ -138,6 +158,9 @@ const ScrumBoardDashboard: React.FC = () => {
                   {tasks.todo.map((task) => (
                     <Card key={task.id} title={task.title}>
                       {task.description}
+                      <Button onClick={() => handleEditTask(task)}>
+                        OULEh
+                      </Button>
                     </Card>
                   ))}
                 </Card>
