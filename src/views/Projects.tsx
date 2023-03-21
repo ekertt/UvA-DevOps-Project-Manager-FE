@@ -88,6 +88,7 @@ export const Projects: FC = () => {
               loading={isLoading}
             />
             <Button
+              style={{ background: '#DF9760', color: '#1C415E' }}
               type="primary"
               onClick={handleOpenCreateModal}
               icon={<PlusOutlined />}
@@ -143,7 +144,11 @@ export const Projects: FC = () => {
                   onClick={() => handleOpenEditModal(project)}
                 />,
                 <Link to={`/projects/${project.id}`}>
-                  <Button type="link" icon={<EyeOutlined />} />
+                  <Button
+                    style={{ color: '#2E7FBE' }}
+                    type="link"
+                    icon={<EyeOutlined />}
+                  />
                 </Link>,
               ]}
             >

@@ -90,7 +90,12 @@ export const EditTaskModal: FC<EditTaskModalProps> = (props) => {
         <Input.TextArea />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" loading={isUploading} htmlType="submit">
+        <Button
+          style={{ background: '#1C415E', color: '#DF9760' }}
+          type="primary"
+          loading={isUploading}
+          htmlType="submit"
+        >
           Save
         </Button>
       </Form.Item>

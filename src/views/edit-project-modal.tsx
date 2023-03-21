@@ -75,7 +75,12 @@ export const EditProjectModal: FC<EditProjectModalProps> = (props) => {
         <Input.TextArea />
       </Form.Item>
       <Form.Item>
-        <Button type="primary" loading={isUploading} htmlType="submit">
+        <Button
+          type="primary"
+          loading={isUploading}
+          htmlType="submit"
+          style={{ background: '#1C415E', color: '#DF9760' }}
+        >
           Save
         </Button>
       </Form.Item>

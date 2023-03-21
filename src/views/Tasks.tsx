@@ -200,7 +200,11 @@ const Tasks: React.FC = () => {
           <ProCard style={{ textAlign: 'right' }}>
             <Space>
               <Button icon={<ReloadOutlined />} onClick={handleGetTasks} />
-              <Button type="primary" onClick={() => setModalVisible(true)}>
+              <Button
+                type="primary"
+                style={{ background: '#DF9760', color: '#1C415E' }}
+                onClick={() => setModalVisible(true)}
+              >
                 <PlusOutlined /> New Task
               </Button>
             </Space>
