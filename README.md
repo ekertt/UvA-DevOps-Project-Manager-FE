@@ -1,11 +1,12 @@
 ## Project Name & Pitch
+
 SprintVision
 
 An application used to create scrum boards for development teams to integrate into their agile workflow. Built with React, TypeScript, and a combination of AWS services.
 
 ## Project Status
 
-This project is currently in development. It is possible to create, update, and delete projects. Within these projects you can create, update, and delete tasks. There also exist three columns, namely: 'To-Do', 'In Progress', and 'Done'. 
+This project is currently in development. It is possible to create, update, and delete projects. Within these projects you can create, update, and delete tasks. There also exist three columns, namely: 'To-Do', 'In Progress', and 'Done'.
 Users pick tasks and update their status accordingly to one of the three states. New tasks are always created in the 'To-Do' state.
 
 ## Installation and Setup Instructions
@@ -34,8 +35,6 @@ Or go to the following URL to see the current live version:
 
 ## Project Screen Shots
 
-![Dashboard](assets/project_overview.png "Dashboard")
+![Dashboard](assets/project_overview.png 'Dashboard')
 
-![Project Overview](assets/project_overview.png "Project Overview")
-
-
+![Project Overview](assets/project_overview.png 'Project Overview')
