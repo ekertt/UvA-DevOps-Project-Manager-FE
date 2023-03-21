@@ -56,21 +56,21 @@ export const Projects: FC = () => {
     await handleGetProjects();
   };
 
-	const handleGetProjects = useCallback(async () => {
-		setIsLoading(true);
-		const projects = await getProjects(user!.idToken.jwtToken);
-		setProjects(projects);
-		setIsLoading(false);
-	}, [setIsLoading, setProjects, user]);
+  const handleGetProjects = useCallback(async () => {
+    setIsLoading(true);
+    const projects = await getProjects(user!.idToken.jwtToken);
+    setProjects(projects);
+    setIsLoading(false);
+  }, [setIsLoading, setProjects, user]);
 
   const handleDeleteProject = async (projectId: string) => {
     await deleteProject(projectId, user!.idToken.jwtToken);
     await handleGetProjects();
   };
 
-	useEffect(() => {
-		handleGetProjects();
-	}, [handleGetProjects]);
+  useEffect(() => {
+    handleGetProjects();
+  }, [handleGetProjects]);
 
   return (
     <ProCard direction="column" ghost gutter={[16, 8]}>
