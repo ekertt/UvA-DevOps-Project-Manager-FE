@@ -50,7 +50,7 @@ export const NotAuthenticated: FC = () => {
             <ProCard
               ghost
               layout="center"
-              colSpan={8}
+              colSpan={9}
               style={{ height: '100%' }}
             >
               <LandingPageSVG />
