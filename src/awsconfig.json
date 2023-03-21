@@ -10,14 +10,14 @@
       "expires": 365,
       "secure": true
     },
-    "redirectSignIn": "http://localhost:3000",
-    "redirectSignOut": "http://localhost:3000"
+    "redirectSignIn": "https://main.d3dnw7a43fmsto.amplifyapp.com",
+    "redirectSignOut": "https://main.d3dnw7a43fmsto.amplifyapp.com"
   },
   "API": {
     "endpoints": [
       {
         "name": "demo",
-        "endpoint": "http://localhost:3000"
+        "endpoint": "https://main.d3dnw7a43fmsto.amplifyapp.com"
       }
     ]
   }

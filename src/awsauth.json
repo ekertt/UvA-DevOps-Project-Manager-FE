@@ -1,7 +1,7 @@
 {
   "domain": "dev-tim-project-manager-app.auth.eu-west-1.amazoncognito.com",
   "scope": ["email", "profile", "openid"],
-  "redirectSignIn": "http://localhost:3000",
-  "redirectSignOut": "http://localhost:3000",
+  "redirectSignIn": "https://main.d3dnw7a43fmsto.amplifyapp.com",
+  "redirectSignOut": "https://main.d3dnw7a43fmsto.amplifyapp.com",
   "responseType": "code"
 }
