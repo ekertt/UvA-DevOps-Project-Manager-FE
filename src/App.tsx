@@ -50,7 +50,7 @@ const App: FC = () => {
           }}
         >
           {!user ? (
-            <Login /> // TODO: Style page which shows that you aren't logged in
+            <Login />
           ) : (
             <>
               <Header
