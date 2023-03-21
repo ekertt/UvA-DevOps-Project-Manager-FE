@@ -1,7 +1,7 @@
 {
   "domain": "dev-tim-project-manager-app.auth.eu-west-1.amazoncognito.com",
   "scope": ["email", "profile", "openid"],
-  "redirectSignIn": "http://localhost:3000",
-  "redirectSignOut": "http://localhost:3000",
+  "redirectSignIn": "http://production.eba-zyid4nzm.eu-west-1.elasticbeanstalk.com",
+  "redirectSignOut": "http://production.eba-zyid4nzm.eu-west-1.elasticbeanstalk.com",
   "responseType": "code"
 }

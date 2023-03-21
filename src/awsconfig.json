@@ -10,14 +10,14 @@
       "expires": 365,
       "secure": true
     },
-    "redirectSignIn": "http://localhost:3000",
-    "redirectSignOut": "http://localhost:3000"
+    "redirectSignIn": "http://production.eba-zyid4nzm.eu-west-1.elasticbeanstalk.com",
+    "redirectSignOut": "http://production.eba-zyid4nzm.eu-west-1.elasticbeanstalk.com"
   },
   "API": {
     "endpoints": [
       {
         "name": "demo",
-        "endpoint": "http://localhost:3000/"
+        "endpoint": "http://production.eba-zyid4nzm.eu-west-1.elasticbeanstalk.com"
       }
     ]
   }
