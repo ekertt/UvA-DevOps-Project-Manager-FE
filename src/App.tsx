@@ -10,6 +10,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Tasks from './views/Tasks';
 import { Avatar, Col, Layout, Menu, Row } from 'antd';
 import { NotAuthenticated } from './views/NotAuthenticated';
+import { TitleComponent } from './views/TitleComponent';
 
 const { Header, Content } = Layout;
 
@@ -56,6 +57,9 @@ const App: FC = () => {
                         <span>{parseName(user)}</span>
                       </div>
                     )}
+                  </Col>
+                  <Col style={{minWidth: '30%'}}>
+                    <TitleComponent />
                   </Col>
                   <Col>
                     <Login />
