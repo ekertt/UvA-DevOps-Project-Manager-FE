@@ -1,5 +1,13 @@
-import { FC, useCallback, useContext, useEffect, useState } from 'react';
-import { Button, List, Modal, Popconfirm, Space, Typography } from 'antd';
+import { FC, useContext, useEffect, useState, useCallback } from 'react';
+import {
+  Avatar,
+  Button,
+  List,
+  Modal,
+  Popconfirm,
+  Space,
+  Typography,
+} from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -12,6 +20,8 @@ import { deleteProject, getProjects } from '../api/projects';
 import authContext from '../auth/auth-context';
 import { EditProjectModal } from './edit-project-modal';
 import { CreateProjectModal } from './create-project-modal';
+import { Link } from 'react-router-dom';
+import { ProCard } from '@ant-design/pro-components';
 
 const { Title } = Typography;
 
@@ -63,18 +73,14 @@ export const Projects: FC = () => {
   }, [handleGetProjects]);
 
   return (
-    <div style={{ margin: '24px' }}>
-      <Title level={2}>Projects</Title>
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginBottom: '16px',
-        }}
-      >
-        <div
-          style={{ display: 'flex', justifyContent: 'flex-end', width: '100%' }}
-        >
+    <ProCard direction="column" ghost gutter={[16, 8]}>
+      <ProCard bordered bodyStyle={{ padding: 0, margin: 0 }}>
+        <ProCard>
+          <Title level={3} style={{ marginBottom: 0, paddingBottom: 0 }}>
+            Projects
+          </Title>
+        </ProCard>
+        <ProCard style={{ textAlign: 'right' }}>
           <Space>
             <Button
               onClick={handleGetProjects}
@@ -89,64 +95,76 @@ export const Projects: FC = () => {
               Create Project
             </Button>
           </Space>
-        </div>
-      </div>
+        </ProCard>
+      </ProCard>
+      <ProCard bordered>
+        <Modal
+          title="Edit Project"
+          open={isEditModalVisible}
+          onCancel={handleCloseModal}
+          onOk={handleCloseModal}
+          footer={null}
+          destroyOnClose
+        >
+          <EditProjectModal
+            project={selectedProject}
+            onUpdate={handleCreateUpdateModal}
+          />
+        </Modal>
 
-      <Modal
-        title="Edit Project"
-        open={isEditModalVisible}
-        onCancel={handleCloseModal}
-        onOk={handleCloseModal}
-        footer={null}
-        destroyOnClose
-      >
-        <EditProjectModal
-          project={selectedProject}
-          onUpdate={handleCreateUpdateModal}
+        <Modal
+          title="Create Project"
+          open={isCreateModalVisible}
+          onCancel={handleCloseModal}
+          onOk={handleCloseModal}
+          footer={null}
+          destroyOnClose
+        >
+          <CreateProjectModal onCreate={handleCreateUpdateModal} />
+        </Modal>
+
+        <List
+          itemLayout="horizontal"
+          loading={isLoading}
+          dataSource={projects}
+          renderItem={(project) => (
+            <List.Item
+              actions={[
+                <Popconfirm
+                  id={`${project.id}-delete-confirm`}
+                  title={`Are you sure you want to delete ${project.name}?`}
+                  onConfirm={() => handleDeleteProject(project.id)}
+                >
+                  <Button type="text" danger icon={<DeleteOutlined />} />
+                </Popconfirm>,
+                <Button
+                  type="text"
+                  icon={<EditOutlined />}
+                  onClick={() => handleOpenEditModal(project)}
+                />,
+                <Link to={`/projects/${project.id}`}>
+                  <Button type="link" icon={<EyeOutlined />} />
+                </Link>,
+              ]}
+            >
+              <List.Item.Meta
+                title={project.name}
+                description={project.description}
+                avatar={
+                  <Avatar
+                    style={{
+                      backgroundColor: '#fde3cf',
+                      color: '#f56a00',
+                    }}
+                  >
+                    {project.name.substring(0, 2).toUpperCase()}
+                  </Avatar>
+                }
+              />
+            </List.Item>
+          )}
         />
-      </Modal>
-
-      <Modal
-        title="Create Project"
-        open={isCreateModalVisible}
-        onCancel={handleCloseModal}
-        onOk={handleCloseModal}
-        footer={null}
-        destroyOnClose
-      >
-        <CreateProjectModal onCreate={handleCreateUpdateModal} />
-      </Modal>
-
-      <List
-        loading={isLoading}
-        dataSource={projects}
-        renderItem={(project) => (
-          <List.Item>
-            <List.Item.Meta
-              title={project.name}
-              description={project.description}
-            />
-            <Space>
-              <Popconfirm
-                id={`${project.id}-delete-confirm`}
-                title={`Are you sure you want to delete ${project.name}?`}
-                onConfirm={() => handleDeleteProject(project.id)}
-              >
-                <Button danger icon={<DeleteOutlined />} />
-              </Popconfirm>
-              <Button
-                icon={<EditOutlined />}
-                onClick={() => handleOpenEditModal(project)}
-              />
-              <Button
-                type="primary"
-                icon={<EyeOutlined />}
-                href={`/projects/${project.id}`}
-              />
-            </Space>
-          </List.Item>
-        )}
-      />
-    </div>
+      </ProCard>
+    </ProCard>
   );
 };

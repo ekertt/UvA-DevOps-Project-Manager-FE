@@ -16,6 +16,7 @@ import {
   DeleteOutlined,
   LeftOutlined,
   PlusOutlined,
+  ReloadOutlined,
   RightOutlined,
 } from '@ant-design/icons';
 import authContext from '../auth/auth-context';
@@ -30,6 +31,7 @@ import {
 } from '../api/tasks';
 import { Task } from '../models/Task';
 import { EditTaskModal } from './edit-task-modal';
+import { ProCard } from '@ant-design/pro-components';
 
 const { Header, Content } = Layout;
 const { Title } = Typography;
@@ -46,9 +48,14 @@ const Tasks: React.FC = () => {
     'in-progress': [],
     done: [],
   });
+
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setEditModalVisibility] = useState<boolean>(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isCreateModalVisible, setCreateModalVisibility] =
+    useState<boolean>(false);
   const [form] = Form.useForm();
 
   const { user } = useContext(authContext);
@@ -80,6 +87,10 @@ const Tasks: React.FC = () => {
     fetchTasks();
   }, [project_id, user]);
 
+  const handleOpenCreateModal = () => {
+    setCreateModalVisibility(true);
+  };
+
   const handleOpenEditModal = (task: Task) => {
     setSelectedTask(task);
     setEditModalVisibility(true);
@@ -87,15 +98,20 @@ const Tasks: React.FC = () => {
 
   const handleCloseModal = () => {
     setEditModalVisibility(false);
+    setCreateModalVisibility(false);
   };
 
   const handleGetTasks = async () => {
+    setIsLoading(true);
+
     const tasks = await getTasksForProject(project_id!, user!.idToken.jwtToken);
     setTasks({
       todo: tasks.filter((task) => task.state === 'todo'),
       'in-progress': tasks.filter((task) => task.state === 'in-progress'),
       done: tasks.filter((task) => task.state === 'done'),
     });
+
+    setIsLoading(false);
   };
 
   const handleCreateTask = async (values: any) => {
@@ -169,29 +185,38 @@ const Tasks: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Header
-        style={{ textAlign: 'right', background: '#fff', padding: '0 16px' }}
-      >
-        <Row style={{ justifyContent: 'space-between' }}>
-          <Col>
-            <Link to={`/`}>
-              <Button icon={<LeftOutlined />}>Back</Button>
-            </Link>
-          </Col>
-          <Col>
-            <Button type="primary" onClick={() => setModalVisible(true)}>
-              <PlusOutlined /> New Task
-            </Button>
-          </Col>
-        </Row>
-      </Header>
+      <ProCard direction="column" ghost gutter={[16, 8]}>
+        <ProCard bordered bodyStyle={{ padding: 0, margin: 0 }}>
+          <ProCard>
+            <Space>
+              <Link to={`/`}>
+                <Button type="text" icon={<LeftOutlined />} />
+              </Link>
+              <Title level={3} style={{ marginBottom: 0, paddingBottom: 0 }}>
+                {project?.name}
+              </Title>
+            </Space>
+          </ProCard>
+          <ProCard style={{ textAlign: 'right' }}>
+            <Space>
+              <Button icon={<ReloadOutlined />} onClick={handleGetTasks} />
+              <Button type="primary" onClick={() => setModalVisible(true)}>
+                <PlusOutlined /> New Task
+              </Button>
+            </Space>
+          </ProCard>
+        </ProCard>
+      </ProCard>
       <Content style={{ padding: '16px' }}>
         {project && (
           <>
-            <Title level={3}>{project.name}</Title>
             <Row gutter={[16, 16]}>
               <Col span={8}>
-                <Card title="To Do" style={{ height: '100%' }}>
+                <Card
+                  loading={isLoading}
+                  title="To-Do"
+                  style={{ height: '100%' }}
+                >
                   {tasks.todo.map((task) => (
                     <Card
                       key={task.id}
@@ -243,7 +268,11 @@ const Tasks: React.FC = () => {
                 </Card>
               </Col>
               <Col span={8}>
-                <Card title="In Progress" style={{ height: '100%' }}>
+                <Card
+                  loading={isLoading}
+                  title="In Progress"
+                  style={{ height: '100%' }}
+                >
                   {tasks['in-progress'].map((task) => (
                     <Card
                       key={task.id}
@@ -273,7 +302,7 @@ const Tasks: React.FC = () => {
                         >
                           {task.description}
                           <Space.Compact block>
-                            <Button onClick={() => handleOpenEditModal}>
+                            <Button onClick={handleOpenCreateModal}>
                               Edit
                             </Button>
                             <Popconfirm
@@ -294,7 +323,11 @@ const Tasks: React.FC = () => {
                 </Card>
               </Col>
               <Col span={8}>
-                <Card title="Done" style={{ height: '100%' }}>
+                <Card
+                  loading={isLoading}
+                  title="Done"
+                  style={{ height: '100%' }}
+                >
                   {tasks.done.map((task) => (
                     <Card
                       key={task.id}
@@ -325,7 +358,7 @@ const Tasks: React.FC = () => {
                         >
                           {task.description}
                           <Space.Compact block>
-                            <Button onClick={() => handleOpenEditModal}>
+                            <Button onClick={handleOpenCreateModal}>
                               Edit
                             </Button>
                             <Popconfirm
