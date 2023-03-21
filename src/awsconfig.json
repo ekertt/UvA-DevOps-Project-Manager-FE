@@ -10,14 +10,14 @@
       "expires": 365,
       "secure": true
     },
-    "redirectSignIn": "http://production.eba-zyid4nzm.eu-west-1.elasticbeanstalk.com",
-    "redirectSignOut": "http://production.eba-zyid4nzm.eu-west-1.elasticbeanstalk.com"
+    "redirectSignIn": "https://main.d3dnw7a43fmsto.amplifyapp.com",
+    "redirectSignOut": "https://main.d3dnw7a43fmsto.amplifyapp.com"
   },
   "API": {
     "endpoints": [
       {
         "name": "demo",
-        "endpoint": "http://production.eba-zyid4nzm.eu-west-1.elasticbeanstalk.com"
+        "endpoint": "https://main.d3dnw7a43fmsto.amplifyapp.com"
       }
     ]
   }
