@@ -1,8 +1,10 @@
 import {Button, Divider, Space, Typography} from 'antd';
-import React, {FC} from 'react';
-import {Auth} from "aws-amplify";
+import React, {FC, useContext, useEffect} from 'react';
+import {Auth, Hub} from "aws-amplify";
 import {LoginOutlined} from "@ant-design/icons";
 import {ProCard} from '@ant-design/pro-components';
+import authContext from "../auth/auth-context";
+import {SignInUserSession} from "../models/sign-in-user-session";
 
 const {Title} = Typography;
 
@@ -123,6 +125,25 @@ const svg = (
 )
 
 export const NotAuthenticated: FC = () => {
+	const { setUser } = useContext(authContext);
+
+	useEffect(
+		() =>
+			Hub.listen('auth', ({ payload: { event, data } }) => {
+				switch (event) {
+					case 'signIn':
+						setUser(data.signInUserSession as SignInUserSession);
+						break;
+					case 'signOut':
+						setUser(undefined);
+						break;
+					default:
+						break;
+				}
+			}),
+		[setUser]
+	);
+
 	return (
 		<div style={{
 			backgroundColor: '#8BC6EC',
