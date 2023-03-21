@@ -11,7 +11,7 @@ import Tasks from './views/Tasks';
 import { Avatar, Col, Layout, Menu, Row } from 'antd';
 import { NotAuthenticated } from './views/NotAuthenticated';
 
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
 
 const App: FC = () => {
   const [user, setUser] = useState<SignInUserSession | undefined>(undefined);
