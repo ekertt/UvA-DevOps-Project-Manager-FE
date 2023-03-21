@@ -1,5 +1,5 @@
 ## Project Name & Pitch
-DevOps Project Manager
+SprintVision
 
 An application used to create scrum boards for development teams to integrate into their agile workflow. Built with React, TypeScript, and a combination of AWS services.
 
