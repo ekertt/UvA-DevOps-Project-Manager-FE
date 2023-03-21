@@ -32,7 +32,7 @@ const App: FC = () => {
       <div className="App">
         <Layout className="layout">
           {!user ? (
-            <NotAuthenticated /> // TODO: Style page which shows that you aren't logged in
+            <NotAuthenticated />
           ) : (
             <>
               <Header style={{ backgroundColor: '#e6f4ff' }}>
