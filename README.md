@@ -29,6 +29,8 @@ To Visit App:
 
 `localhost:3000/`
 
+To use this project locally you need to enable your CORS!!
+
 Or go to the following URL to see the current live version:
 
 `https://main.d3dnw7a43fmsto.amplifyapp.com/`
