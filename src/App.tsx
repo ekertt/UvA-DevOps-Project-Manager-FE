@@ -58,7 +58,7 @@ const App: FC = () => {
                       </div>
                     )}
                   </Col>
-                  <Col style={{minWidth: '30%'}}>
+                  <Col style={{ minWidth: '30%' }}>
                     <TitleComponent />
                   </Col>
                   <Col>
