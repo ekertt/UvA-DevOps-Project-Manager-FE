@@ -21,7 +21,7 @@ import {
 } from '@ant-design/icons';
 import authContext from '../auth/auth-context';
 import { Link, useParams } from 'react-router-dom';
-import { Project } from '../models/Project';
+import { ProjectModel } from '../models/project-model';
 import { getProjectById } from '../api/projects';
 import {
   createTask,
@@ -29,20 +29,20 @@ import {
   getTasksForProject,
   updateTask,
 } from '../api/tasks';
-import { Task } from '../models/Task';
-import { EditTaskModal } from './edit-task-modal';
+import { TaskModel } from '../models/task-model';
+import { EditTaskModalComponent } from '../components/edit-task-modal-component';
 import { ProCard } from '@ant-design/pro-components';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
 interface ITaskState {
-  todo: Task[];
-  'in-progress': Task[];
-  done: Task[];
+  todo: TaskModel[];
+  'in-progress': TaskModel[];
+  done: TaskModel[];
 }
 
-const Tasks: React.FC = () => {
+const TasksPage: React.FC = () => {
   const [tasks, setTasks] = useState<ITaskState>({
     todo: [],
     'in-progress': [],
@@ -53,12 +53,12 @@ const Tasks: React.FC = () => {
 
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setEditModalVisibility] = useState<boolean>(false);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [selectedTask, setSelectedTask] = useState<TaskModel | null>(null);
   const [form] = Form.useForm();
 
   const { user } = useContext(authContext);
   const { project_id } = useParams<{ project_id: string }>();
-  const [project, setProject] = useState<Project | null>(null);
+  const [project, setProject] = useState<ProjectModel | null>(null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -85,7 +85,7 @@ const Tasks: React.FC = () => {
     fetchTasks();
   }, [project_id, user]);
 
-  const handleOpenEditModal = (task: Task) => {
+  const handleOpenEditModal = (task: TaskModel) => {
     setSelectedTask(task);
     setEditModalVisibility(true);
   };
@@ -122,7 +122,7 @@ const Tasks: React.FC = () => {
     await handleGetTasks();
   };
 
-  const handleUpdateTaskStateLeft = async (task: Task) => {
+  const handleUpdateTaskStateLeft = async (task: TaskModel) => {
     try {
       switch (task.state) {
         case 'todo':
@@ -142,7 +142,7 @@ const Tasks: React.FC = () => {
     }
   };
 
-  const handleUpdateTaskStateRight = async (task: Task) => {
+  const handleUpdateTaskStateRight = async (task: TaskModel) => {
     try {
       switch (task.state) {
         case 'todo':
@@ -194,7 +194,7 @@ const Tasks: React.FC = () => {
             <Space>
               <Button icon={<ReloadOutlined />} onClick={handleGetTasks} />
               <Button type="primary" onClick={() => setModalVisible(true)}>
-                <PlusOutlined /> New Task
+                <PlusOutlined /> New TaskModel
               </Button>
             </Space>
           </ProCard>
@@ -375,7 +375,7 @@ const Tasks: React.FC = () => {
           </>
         )}
         <Modal
-          title="New Task"
+          title="New TaskModel"
           visible={modalVisible}
           onCancel={() => setModalVisible(false)}
           onOk={form.submit}
@@ -406,14 +406,14 @@ const Tasks: React.FC = () => {
           </Form>
         </Modal>
         <Modal
-          title="Edit Task"
+          title="Edit TaskModel"
           open={isEditModalVisible}
           onCancel={handleCloseModal}
           onOk={handleCloseModal}
           footer={null}
           destroyOnClose
         >
-          <EditTaskModal
+          <EditTaskModalComponent
             task={selectedTask}
             onUpdate={handleCreateUpdateModal}
           />
@@ -423,4 +423,4 @@ const Tasks: React.FC = () => {
   );
 };
 
-export default Tasks;
+export default TasksPage;

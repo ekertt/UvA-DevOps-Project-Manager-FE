@@ -1,55 +1,35 @@
 import { FC, useContext, useState } from 'react';
 import { Button, Form, Input } from 'antd';
-import { Project } from '../models/Project';
-import { updateProject } from '../api/projects';
+import { createProject } from '../api/projects';
 import authContext from '../auth/auth-context';
 
 interface EditProjectModalProps {
-  project: Project | null;
-  onUpdate: () => void;
+  onCreate: () => void;
 }
 
-export const EditProjectModal: FC<EditProjectModalProps> = (props) => {
+export const CreateProjectModalComponent: FC<EditProjectModalProps> = (props) => {
   const [isUploading, setUploading] = useState<boolean>(false);
 
-  const [editForm] = Form.useForm();
+  const [createForm] = Form.useForm();
 
   const { user } = useContext(authContext);
 
-  const handleUpdateProject = async (project: Project) => {
+  const handleCreateProject = async (project: {
+    name: string;
+    description: string;
+  }) => {
     setUploading(true);
 
-    await editForm.validateFields();
-    await updateProject(project, user!.idToken.jwtToken);
-
-    props.onUpdate();
+    await createProject(project, user!.idToken.jwtToken);
+    createForm.resetFields();
 
     setUploading(false);
+
+    props.onCreate();
   };
 
   return (
-    <Form
-      form={editForm}
-      onFinish={handleUpdateProject}
-      initialValues={{
-        id: props.project?.id,
-        name: props.project?.name,
-        description: props.project?.description,
-      }}
-      layout="vertical"
-    >
-      <Form.Item
-        hidden
-        name="id"
-        label="id"
-        rules={[
-          {
-            required: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
+    <Form form={createForm} onFinish={handleCreateProject} layout="vertical">
       <Form.Item
         name="name"
         label="Name"
@@ -76,7 +56,7 @@ export const EditProjectModal: FC<EditProjectModalProps> = (props) => {
       </Form.Item>
       <Form.Item>
         <Button type="primary" loading={isUploading} htmlType="submit">
-          Save
+          Create
         </Button>
       </Form.Item>
     </Form>

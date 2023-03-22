@@ -2,26 +2,26 @@ import type { FC } from 'react';
 import React, { useState } from 'react';
 import 'antd/dist/reset.css';
 import './App.css';
-import { Login } from './views/Login';
+import { AuthenticationComponent } from './components/authentication-component';
 import authContext from './auth/auth-context';
-import { SignInUserSession } from './models/sign-in-user-session';
-import { Projects } from './views/Projects';
+import { SignInUserSessionModel } from './models/sign-in-user-session-model';
+import { ProjectsPage } from './views/projects-page';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Tasks from './views/Tasks';
+import TasksPage from './views/tasks-page';
 import { Avatar, Col, Layout, Menu, Row } from 'antd';
-import { NotAuthenticated } from './views/NotAuthenticated';
-import { TitleComponent } from './views/TitleComponent';
+import { LandingPage } from './views/landing-page';
+import { TitleComponent } from './components/title-component';
 
 const { Header, Content } = Layout;
 
 const App: FC = () => {
-  const [user, setUser] = useState<SignInUserSession | undefined>(undefined);
+  const [user, setUser] = useState<SignInUserSessionModel | undefined>(undefined);
 
-  const parseNameFirstLetter = (user: SignInUserSession): string => {
+  const parseNameFirstLetter = (user: SignInUserSessionModel): string => {
     return user.idToken.payload.given_name.charAt(0) || '';
   };
 
-  const parseName = (user: SignInUserSession): string => {
+  const parseName = (user: SignInUserSessionModel): string => {
     const name = user.idToken.payload.given_name;
     const familyName = user.idToken.payload.family_name;
 
@@ -33,7 +33,7 @@ const App: FC = () => {
       <div className="App">
         <Layout className="layout">
           {!user ? (
-            <NotAuthenticated />
+            <LandingPage />
           ) : (
             <>
               <Header style={{ backgroundColor: '#e6f4ff' }}>
@@ -62,15 +62,15 @@ const App: FC = () => {
                     <TitleComponent />
                   </Col>
                   <Col>
-                    <Login />
+                    <AuthenticationComponent />
                   </Col>
                 </Row>
               </Header>
               <Content>
                 <BrowserRouter>
                   <Routes>
-                    <Route path="/" Component={Projects} />
-                    <Route path="/projects/:project_id" Component={Tasks} />
+                    <Route path="/" Component={ProjectsPage} />
+                    <Route path="/projects/:project_id" Component={TasksPage} />
                   </Routes>
                 </BrowserRouter>
               </Content>

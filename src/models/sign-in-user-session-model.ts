@@ -1,4 +1,4 @@
-export interface SignInUserSession {
+export interface SignInUserSessionModel {
   idToken: IdToken;
   refreshToken: RefreshToken;
   accessToken: AccessToken;
