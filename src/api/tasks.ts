@@ -1,11 +1,11 @@
-import { CreateTask, Task } from '../models/Task';
+import { CreateTask, TaskModel } from '../models/task-model';
 
 const baseUrl = process.env.REACT_APP_API_URL!;
 
 export const getTasksForProject = async (
   projectId: string,
   token: string
-): Promise<Task[]> => {
+): Promise<TaskModel[]> => {
   const response = await fetch(`${baseUrl}/projects/${projectId}/tasks`, {
     method: 'GET',
     headers: {
@@ -16,7 +16,7 @@ export const getTasksForProject = async (
   if (!response.ok) {
     throw new Error(`Failed to fetch tasks for project with id ${projectId}`);
   }
-  return (await response.json()) as Task[];
+  return (await response.json()) as TaskModel[];
 };
 
 export const createTask = async (
@@ -35,7 +35,7 @@ export const createTask = async (
 };
 
 export const updateTask = async (
-  task: Task,
+  task: TaskModel,
   token: String,
   projectId: string
 ): Promise<void> => {

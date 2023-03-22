@@ -15,25 +15,25 @@ import {
   PlusOutlined,
   ReloadOutlined,
 } from '@ant-design/icons';
-import { Project } from '../models/Project';
+import { ProjectModel } from '../models/project-model';
 import { deleteProject, getProjects } from '../api/projects';
 import authContext from '../auth/auth-context';
-import { EditProjectModal } from './edit-project-modal';
-import { CreateProjectModal } from './create-project-modal';
+import { EditProjectModalComponent } from '../components/edit-project-modal-component';
+import { CreateProjectModalComponent } from '../components/create-project-modal-component';
 import { Link } from 'react-router-dom';
 import { ProCard } from '@ant-design/pro-components';
 
 const { Title } = Typography;
 
-export const Projects: FC = () => {
+export const ProjectsPage: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const [isCreateModalVisible, setCreateModalVisibility] =
     useState<boolean>(false);
   const [isEditModalVisible, setEditModalVisibility] = useState<boolean>(false);
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
+  const [selectedProject, setSelectedProject] = useState<ProjectModel | null>(null);
 
-  const [projects, setProjects] = useState<Project[]>([]);
+  const [projects, setProjects] = useState<ProjectModel[]>([]);
 
   const { user } = useContext(authContext);
 
@@ -41,7 +41,7 @@ export const Projects: FC = () => {
     setCreateModalVisibility(true);
   };
 
-  const handleOpenEditModal = (project: Project) => {
+  const handleOpenEditModal = (project: ProjectModel) => {
     setSelectedProject(project);
     setEditModalVisibility(true);
   };
@@ -92,35 +92,35 @@ export const Projects: FC = () => {
               onClick={handleOpenCreateModal}
               icon={<PlusOutlined />}
             >
-              Create Project
+              Create ProjectModel
             </Button>
           </Space>
         </ProCard>
       </ProCard>
       <ProCard bordered>
         <Modal
-          title="Edit Project"
+          title="Edit ProjectModel"
           open={isEditModalVisible}
           onCancel={handleCloseModal}
           onOk={handleCloseModal}
           footer={null}
           destroyOnClose
         >
-          <EditProjectModal
+          <EditProjectModalComponent
             project={selectedProject}
             onUpdate={handleCreateUpdateModal}
           />
         </Modal>
 
         <Modal
-          title="Create Project"
+          title="Create ProjectModel"
           open={isCreateModalVisible}
           onCancel={handleCloseModal}
           onOk={handleCloseModal}
           footer={null}
           destroyOnClose
         >
-          <CreateProjectModal onCreate={handleCreateUpdateModal} />
+          <CreateProjectModalComponent onCreate={handleCreateUpdateModal} />
         </Modal>
 
         <List

@@ -1,10 +1,10 @@
-import { Project } from '../models/Project';
-import { CreateProject } from '../models/CreateProject';
-import { UpdateProject } from '../models/UpdateProject';
+import { ProjectModel } from '../models/project-model';
+import { CreateProjectModel } from '../models/create-project-model';
+import { UpdateProjectModel } from '../models/update-project-model';
 
 const baseUrl = process.env.REACT_APP_API_URL!;
 
-export const getProjects = (token: string): Promise<Project[]> => {
+export const getProjects = (token: string): Promise<ProjectModel[]> => {
   return fetch(`${baseUrl}/projects`, {
     method: 'GET',
     headers: {
@@ -12,14 +12,14 @@ export const getProjects = (token: string): Promise<Project[]> => {
       Authorization: `Bearer ${token}`,
     },
   }).then((response) => {
-    return response.json() as Promise<Project[]>;
+    return response.json() as Promise<ProjectModel[]>;
   });
 };
 
 export const getProjectById = (
   projectId: string,
   token: string
-): Promise<Project> => {
+): Promise<ProjectModel> => {
   return fetch(`${baseUrl}/projects/${projectId}`, {
     method: 'GET',
     headers: {
@@ -27,12 +27,12 @@ export const getProjectById = (
       Authorization: `Bearer ${token}`,
     },
   }).then((response) => {
-    return response.json() as Promise<Project>;
+    return response.json() as Promise<ProjectModel>;
   });
 };
 
 export const createProject = async (
-  project: CreateProject,
+  project: CreateProjectModel,
   token: string
 ): Promise<void> => {
   await fetch(`${baseUrl}/projects`, {
@@ -46,7 +46,7 @@ export const createProject = async (
 };
 
 export const updateProject = async (
-  project: UpdateProject,
+  project: UpdateProjectModel,
   token: string
 ): Promise<void> => {
   await fetch(`${baseUrl}/projects/${project.id}`, {

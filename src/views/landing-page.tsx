@@ -4,13 +4,13 @@ import { Auth, Hub } from 'aws-amplify';
 import { LoginOutlined } from '@ant-design/icons';
 import { ProCard } from '@ant-design/pro-components';
 import authContext from '../auth/auth-context';
-import { SignInUserSession } from '../models/sign-in-user-session';
+import { SignInUserSessionModel } from '../models/sign-in-user-session-model';
 import { ReactComponent as LandingPageSVG } from '../assets/not-authenticated.svg';
-import { TitleComponent } from './TitleComponent';
+import { TitleComponent } from '../components/title-component';
 
 const { Title } = Typography;
 
-export const NotAuthenticated: FC = () => {
+export const LandingPage: FC = () => {
   const { setUser } = useContext(authContext);
 
   useEffect(
@@ -18,7 +18,7 @@ export const NotAuthenticated: FC = () => {
       Hub.listen('auth', ({ payload: { event, data } }) => {
         switch (event) {
           case 'signIn':
-            setUser(data.signInUserSession as SignInUserSession);
+            setUser(data.signInUserSession as SignInUserSessionModel);
             break;
           case 'signOut':
             setUser(undefined);

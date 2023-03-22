@@ -1,28 +1,26 @@
 import { FC, useContext, useState } from 'react';
 import { Button, Form, Input } from 'antd';
-import { Task } from '../models/Task';
-import { updateTask } from '../api/tasks';
+import { ProjectModel } from '../models/project-model';
+import { updateProject } from '../api/projects';
 import authContext from '../auth/auth-context';
-import { useParams } from 'react-router-dom';
 
-interface EditTaskModalProps {
-  task: Task | null;
+interface EditProjectModalProps {
+  project: ProjectModel | null;
   onUpdate: () => void;
 }
 
-export const EditTaskModal: FC<EditTaskModalProps> = (props) => {
+export const EditProjectModalComponent: FC<EditProjectModalProps> = (props) => {
   const [isUploading, setUploading] = useState<boolean>(false);
 
   const [editForm] = Form.useForm();
 
   const { user } = useContext(authContext);
-  const { project_id } = useParams<{ project_id: string }>();
 
-  const handleUpdateTask = async (task: Task) => {
+  const handleUpdateProject = async (project: ProjectModel) => {
     setUploading(true);
 
     await editForm.validateFields();
-    await updateTask(task, user!.idToken.jwtToken, project_id!);
+    await updateProject(project, user!.idToken.jwtToken);
 
     props.onUpdate();
 
@@ -32,12 +30,11 @@ export const EditTaskModal: FC<EditTaskModalProps> = (props) => {
   return (
     <Form
       form={editForm}
-      onFinish={handleUpdateTask}
+      onFinish={handleUpdateProject}
       initialValues={{
-        id: props.task?.id,
-        title: props.task?.title,
-        description: props.task?.description,
-        state: props.task?.state,
+        id: props.project?.id,
+        name: props.project?.name,
+        description: props.project?.description,
       }}
       layout="vertical"
     >
@@ -54,24 +51,12 @@ export const EditTaskModal: FC<EditTaskModalProps> = (props) => {
         <Input />
       </Form.Item>
       <Form.Item
-        hidden
-        name="state"
-        label="state"
+        name="name"
+        label="Name"
         rules={[
           {
             required: true,
-          },
-        ]}
-      >
-        <Input />
-      </Form.Item>
-      <Form.Item
-        name="title"
-        label="Title"
-        rules={[
-          {
-            required: true,
-            message: 'Please enter a title for your task',
+            message: 'Please enter a name for your project',
           },
         ]}
       >
@@ -83,7 +68,7 @@ export const EditTaskModal: FC<EditTaskModalProps> = (props) => {
         rules={[
           {
             required: true,
-            message: 'Please enter a description for your task',
+            message: 'Please enter a description for your project',
           },
         ]}
       >

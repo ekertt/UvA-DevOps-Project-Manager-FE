@@ -1,9 +1,9 @@
 import { createContext } from 'react';
-import { SignInUserSession } from '../models/sign-in-user-session';
+import { SignInUserSessionModel } from '../models/sign-in-user-session-model';
 
 interface AuthContext {
-  user?: SignInUserSession;
-  setUser: (user?: SignInUserSession) => void;
+  user?: SignInUserSessionModel;
+  setUser: (user?: SignInUserSessionModel) => void;
 }
 
 const authContext = createContext<AuthContext>({
