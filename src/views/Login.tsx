@@ -1,15 +1,15 @@
 import React, { FC, useContext, useEffect } from 'react';
 import { Amplify, Auth, Hub } from 'aws-amplify';
 
-import awsconfig from '../awsconfig.json';
-import awsauth from '../awsauth.json';
+import { cognitoAuthConfig } from '../awsauth';
 import { Button } from 'antd';
 import authContext from '../auth/auth-context';
 import { SignInUserSession } from '../models/sign-in-user-session';
 import { LoginOutlined, LogoutOutlined } from '@ant-design/icons';
+import { awsConfig } from '../awsconfig';
 
-Amplify.configure(awsconfig);
-Auth.configure({ oauth: awsauth });
+Amplify.configure(awsConfig);
+Auth.configure({ oauth: cognitoAuthConfig });
 
 export const Login: FC = () => {
   const { user, setUser } = useContext(authContext);

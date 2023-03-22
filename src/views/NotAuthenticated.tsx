@@ -1,4 +1,4 @@
-import { Button, Divider, Layout, Space, Typography } from 'antd';
+import { Button, Divider, Space, Typography } from 'antd';
 import React, { FC, useContext, useEffect } from 'react';
 import { Auth, Hub } from 'aws-amplify';
 import { LoginOutlined } from '@ant-design/icons';
