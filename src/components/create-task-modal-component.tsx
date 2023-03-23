@@ -1,44 +1,44 @@
 import { FC, useContext, useState } from 'react';
 import { Button, Form, Input } from 'antd';
-import { createProject } from '../api/projects';
 import authContext from '../auth/auth-context';
+import { createTask } from '../api/tasks';
 
-interface CreateProjectModalProps {
+interface CreateTaskModalProps {
   onCreate: () => void;
+  projectId: string;
 }
 
-export const CreateProjectModalComponent: FC<CreateProjectModalProps> = (
-  props
-) => {
+export const CreateTaskModalComponent: FC<CreateTaskModalProps> = (props) => {
   const [isUploading, setUploading] = useState<boolean>(false);
 
-  const [createForm] = Form.useForm();
+  const [createTaskForm] = Form.useForm();
 
   const { user } = useContext(authContext);
 
-  const handleCreateProject = async (project: {
-    name: string;
-    description: string;
-  }) => {
-    setUploading(true);
-
-    await createProject(project, user!.idToken.jwtToken);
-    createForm.resetFields();
-
+  const handleCreateTask = async (values: any) => {
+    await createTask(
+      props.projectId,
+      {
+        title: values.title,
+        description: values.description,
+        state: 'todo',
+      },
+      user!.idToken.jwtToken
+    );
+    createTaskForm.resetFields();
     setUploading(false);
-
     props.onCreate();
   };
 
   return (
-    <Form form={createForm} onFinish={handleCreateProject} layout="vertical">
+    <Form form={createTaskForm} onFinish={handleCreateTask} layout="vertical">
       <Form.Item
-        name="name"
-        label="Name"
+        name="title"
+        label="Title"
         rules={[
           {
             required: true,
-            message: 'Please enter a name for your project',
+            message: 'Please enter a name for your task',
           },
         ]}
       >
@@ -50,7 +50,7 @@ export const CreateProjectModalComponent: FC<CreateProjectModalProps> = (
         rules={[
           {
             required: true,
-            message: 'Please enter a description for your project',
+            message: 'Please enter a description for your task',
           },
         ]}
       >
