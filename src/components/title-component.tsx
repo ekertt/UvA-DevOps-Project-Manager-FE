@@ -2,6 +2,10 @@ import { Typography } from 'antd';
 import React, { FC } from 'react';
 
 const { Title } = Typography;
+
+/**
+ * This is a component that renders the title for the application
+ */
 export const TitleComponent: FC = () => {
   return (
     <>

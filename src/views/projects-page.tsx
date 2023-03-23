@@ -1,3 +1,6 @@
+/**
+ * A React functional component that renders the projects page.
+ */
 import { FC, useContext, useEffect, useState, useCallback } from 'react';
 import {
   Avatar,
@@ -25,6 +28,9 @@ import { ProCard } from '@ant-design/pro-components';
 
 const { Title } = Typography;
 
+/**
+ * The ProjectsPage component displays a list of projects.
+ */
 export const ProjectsPage: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
@@ -39,25 +45,41 @@ export const ProjectsPage: FC = () => {
 
   const { user } = useContext(authContext);
 
+  /**
+   * Handles opening the create project modal.
+   */
   const handleOpenCreateModal = () => {
     setCreateModalVisibility(true);
   };
 
+  /**
+   * Handles opening the edit project modal.
+   * @param project The project to edit.
+   */
   const handleOpenEditModal = (project: ProjectModel) => {
     setSelectedProject(project);
     setEditModalVisibility(true);
   };
 
+  /**
+   * Handles closing the create/edit project modal.
+   */
   const handleCloseModal = () => {
     setEditModalVisibility(false);
     setCreateModalVisibility(false);
   };
 
+  /**
+   * Handles updating the project list after a create/edit operation.
+   */
   const handleCreateUpdateModal = async () => {
     handleCloseModal();
     await handleGetProjects();
   };
 
+  /**
+   * Handles fetching the list of projects from the server.
+   */
   const handleGetProjects = useCallback(async () => {
     setIsLoading(true);
     const projects = await getProjects(user!.idToken.jwtToken);
@@ -65,6 +87,10 @@ export const ProjectsPage: FC = () => {
     setIsLoading(false);
   }, [setIsLoading, setProjects, user]);
 
+  /**
+   * Handles deleting a project from the server.
+   * @param projectId The ID of the project to delete.
+   */
   const handleDeleteProject = async (projectId: string) => {
     await deleteProject(projectId, user!.idToken.jwtToken);
     await handleGetProjects();

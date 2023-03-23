@@ -1,3 +1,6 @@
+/**
+ * A React functional component that renders a form to edit a project.
+ */
 import { FC, useContext, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import { ProjectModel } from '../models/project-model';
@@ -9,6 +12,12 @@ interface EditProjectModalProps {
   onUpdate: () => void;
 }
 
+/**
+ * The EditProjectModalComponent is a functional component that renders a form to create a new project.
+ *
+ * @param {EditProjectModalProps} props - Props passed to this component.
+ * @returns {JSX.Element} - A React JSX element.
+ */
 export const EditProjectModalComponent: FC<EditProjectModalProps> = (props) => {
   const [isUploading, setUploading] = useState<boolean>(false);
 
@@ -16,6 +25,11 @@ export const EditProjectModalComponent: FC<EditProjectModalProps> = (props) => {
 
   const { user } = useContext(authContext);
 
+  /**
+   * This function handles the update of an existing project and resets the form fields.
+   *
+   * @param project - The project being updated
+   */
   const handleUpdateProject = async (project: ProjectModel) => {
     setUploading(true);
 
@@ -27,6 +41,11 @@ export const EditProjectModalComponent: FC<EditProjectModalProps> = (props) => {
     setUploading(false);
   };
 
+  /**
+   * Render a form to edit an existing project with the necessary input fields and a submit button.
+   *
+   * @returns {JSX.Element} - A React JSX element.
+   */
   return (
     <Form
       form={editForm}

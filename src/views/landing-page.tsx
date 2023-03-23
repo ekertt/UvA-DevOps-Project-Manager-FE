@@ -1,3 +1,6 @@
+/**
+ * A React functional component that renders a the landing page.
+ */
 import { Button, Divider, Space, Typography } from 'antd';
 import React, { FC, useContext, useEffect } from 'react';
 import { Auth, Hub } from 'aws-amplify';
@@ -10,6 +13,9 @@ import { TitleComponent } from '../components/title-component';
 
 const { Title } = Typography;
 
+/**
+ * A component representing the landing page of the application
+ */
 export const LandingPage: FC = () => {
   const { setUser } = useContext(authContext);
 

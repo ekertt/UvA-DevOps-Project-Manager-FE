@@ -1,3 +1,6 @@
+/**
+ * A React functional component that renders the tasks page.
+ */
 import React, { useContext, useEffect, useState } from 'react';
 import {
   Button,
@@ -55,6 +58,9 @@ const TasksPage: React.FC = () => {
   const [project, setProject] = useState<ProjectModel | null>(null);
 
   useEffect(() => {
+    /**
+     * Fetches the project by id
+     */
     const fetchProject = async () => {
       const project = await getProjectById(project_id!, user!.idToken.jwtToken);
       setProject(project);
@@ -64,6 +70,9 @@ const TasksPage: React.FC = () => {
   }, [project_id, user]);
 
   useEffect(() => {
+    /**
+     * Fetches the tasks for the project
+     */
     const fetchTasks = async () => {
       const tasks = await getTasksForProject(
         project_id!,
@@ -79,16 +88,26 @@ const TasksPage: React.FC = () => {
     fetchTasks();
   }, [project_id, user]);
 
+  /**
+   * Handles the opening of edit modal
+   * @param task - task to be edited
+   */
   const handleOpenEditModal = (task: TaskModel) => {
     setSelectedTask(task);
     setEditModalVisibility(true);
   };
 
+  /**
+   * Handles the closing of modals
+   */
   const handleCloseModal = () => {
     setEditModalVisibility(false);
     setCreateModalVisibility(false);
   };
 
+  /**
+   * Fetches the tasks for the project
+   */
   const handleGetTasks = async () => {
     setIsLoading(true);
 
@@ -102,6 +121,9 @@ const TasksPage: React.FC = () => {
     setIsLoading(false);
   };
 
+  /**
+   * Updates the tasks state for the project
+   */
   const handleUpdateTaskStateLeft = async (task: TaskModel) => {
     try {
       switch (task.state) {
@@ -119,6 +141,9 @@ const TasksPage: React.FC = () => {
     }
   };
 
+  /**
+   * Updates the tasks state for the project
+   */
   const handleUpdateTaskStateRight = async (task: TaskModel) => {
     try {
       switch (task.state) {
@@ -136,11 +161,17 @@ const TasksPage: React.FC = () => {
     }
   };
 
+  /**
+   * Handles the closing of the update modal
+   */
   const handleCreateUpdateModal = async () => {
     handleCloseModal();
     await handleGetTasks();
   };
 
+  /**
+   * Handles the deletion of a task
+   */
   const handleDeleteTask = async (taskId: string) => {
     try {
       await deleteTask(taskId, user!.idToken.jwtToken, project_id!);
