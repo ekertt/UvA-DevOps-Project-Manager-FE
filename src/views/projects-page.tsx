@@ -31,7 +31,9 @@ export const ProjectsPage: FC = () => {
   const [isCreateModalVisible, setCreateModalVisibility] =
     useState<boolean>(false);
   const [isEditModalVisible, setEditModalVisibility] = useState<boolean>(false);
-  const [selectedProject, setSelectedProject] = useState<ProjectModel | null>(null);
+  const [selectedProject, setSelectedProject] = useState<ProjectModel | null>(
+    null
+  );
 
   const [projects, setProjects] = useState<ProjectModel[]>([]);
 
@@ -92,7 +94,7 @@ export const ProjectsPage: FC = () => {
               onClick={handleOpenCreateModal}
               icon={<PlusOutlined />}
             >
-              Create ProjectModel
+              Create Project
             </Button>
           </Space>
         </ProCard>

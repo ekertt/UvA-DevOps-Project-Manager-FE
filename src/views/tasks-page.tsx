@@ -3,8 +3,6 @@ import {
   Button,
   Card,
   Col,
-  Form,
-  Input,
   Layout,
   Modal,
   Popconfirm,
@@ -23,20 +21,16 @@ import authContext from '../auth/auth-context';
 import { Link, useParams } from 'react-router-dom';
 import { ProjectModel } from '../models/project-model';
 import { getProjectById } from '../api/projects';
-import {
-  createTask,
-  deleteTask,
-  getTasksForProject,
-  updateTask,
-} from '../api/tasks';
+import { deleteTask, getTasksForProject, updateTask } from '../api/tasks';
 import { TaskModel } from '../models/task-model';
 import { EditTaskModalComponent } from '../components/edit-task-modal-component';
 import { ProCard } from '@ant-design/pro-components';
+import { CreateTaskModalComponent } from '../components/create-task-modal-component';
 
 const { Content } = Layout;
 const { Title } = Typography;
 
-interface ITaskState {
+export interface ITaskState {
   todo: TaskModel[];
   'in-progress': TaskModel[];
   done: TaskModel[];
@@ -51,10 +45,10 @@ const TasksPage: React.FC = () => {
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isEditModalVisible, setEditModalVisibility] = useState<boolean>(false);
+  const [isCreateModalVisible, setCreateModalVisibility] =
+    useState<boolean>(false);
   const [selectedTask, setSelectedTask] = useState<TaskModel | null>(null);
-  const [form] = Form.useForm();
 
   const { user } = useContext(authContext);
   const { project_id } = useParams<{ project_id: string }>();
@@ -92,6 +86,7 @@ const TasksPage: React.FC = () => {
 
   const handleCloseModal = () => {
     setEditModalVisibility(false);
+    setCreateModalVisibility(false);
   };
 
   const handleGetTasks = async () => {
@@ -107,27 +102,9 @@ const TasksPage: React.FC = () => {
     setIsLoading(false);
   };
 
-  const handleCreateTask = async (values: any) => {
-    await createTask(
-      project_id!,
-      {
-        title: values.title,
-        description: values.description,
-        state: 'todo',
-      },
-      user!.idToken.jwtToken
-    );
-    form.resetFields();
-    setModalVisible(false);
-    await handleGetTasks();
-  };
-
   const handleUpdateTaskStateLeft = async (task: TaskModel) => {
     try {
       switch (task.state) {
-        case 'todo':
-          task.state = 'done';
-          break;
         case 'in-progress':
           task.state = 'todo';
           break;
@@ -150,9 +127,6 @@ const TasksPage: React.FC = () => {
           break;
         case 'in-progress':
           task.state = 'done';
-          break;
-        case 'done':
-          task.state = 'todo';
           break;
       }
       await updateTask(task, user!.idToken.jwtToken, project_id!);
@@ -193,8 +167,11 @@ const TasksPage: React.FC = () => {
           <ProCard style={{ textAlign: 'right' }}>
             <Space>
               <Button icon={<ReloadOutlined />} onClick={handleGetTasks} />
-              <Button type="primary" onClick={() => setModalVisible(true)}>
-                <PlusOutlined /> New TaskModel
+              <Button
+                type="primary"
+                onClick={() => setCreateModalVisibility(true)}
+              >
+                <PlusOutlined /> New Task
               </Button>
             </Space>
           </ProCard>
@@ -375,38 +352,20 @@ const TasksPage: React.FC = () => {
           </>
         )}
         <Modal
-          title="New TaskModel"
-          visible={modalVisible}
-          onCancel={() => setModalVisible(false)}
-          onOk={form.submit}
+          title="New Task"
+          open={isCreateModalVisible}
+          onCancel={() => handleCloseModal}
+          onOk={() => handleCloseModal}
+          footer={null}
+          destroyOnClose
         >
-          <Form form={form} onFinish={handleCreateTask}>
-            <Form.Item
-              name="title"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input a title for the task!',
-                },
-              ]}
-            >
-              <Input placeholder="Title" />
-            </Form.Item>
-            <Form.Item
-              name="description"
-              rules={[
-                {
-                  required: true,
-                  message: 'Please input a description for the task!',
-                },
-              ]}
-            >
-              <Input.TextArea placeholder="Description" />
-            </Form.Item>
-          </Form>
+          <CreateTaskModalComponent
+            onCreate={handleCreateUpdateModal}
+            projectId={project_id!}
+          />
         </Modal>
         <Modal
-          title="Edit TaskModel"
+          title="Edit Task"
           open={isEditModalVisible}
           onCancel={handleCloseModal}
           onOk={handleCloseModal}

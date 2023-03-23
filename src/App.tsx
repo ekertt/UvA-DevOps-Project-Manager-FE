@@ -15,7 +15,9 @@ import { TitleComponent } from './components/title-component';
 const { Header, Content } = Layout;
 
 const App: FC = () => {
-  const [user, setUser] = useState<SignInUserSessionModel | undefined>(undefined);
+  const [user, setUser] = useState<SignInUserSessionModel | undefined>(
+    undefined
+  );
 
   const parseNameFirstLetter = (user: SignInUserSessionModel): string => {
     return user.idToken.payload.given_name.charAt(0) || '';
