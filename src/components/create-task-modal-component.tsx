@@ -1,3 +1,6 @@
+/**
+ * A React functional component that renders a form to create a new task for a project.
+ */
 import { FC, useContext, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import authContext from '../auth/auth-context';
@@ -8,6 +11,12 @@ interface CreateTaskModalProps {
   projectId: string;
 }
 
+/**
+ * The CreateTaskModalComponent is a functional component that renders a form to create a new task for a project.
+ *
+ * @param {CreateTaskModalProps} props - Props passed to this component.
+ * @returns {JSX.Element} - A React JSX element.
+ */
 export const CreateTaskModalComponent: FC<CreateTaskModalProps> = (props) => {
   const [isUploading, setUploading] = useState<boolean>(false);
 
@@ -15,6 +24,12 @@ export const CreateTaskModalComponent: FC<CreateTaskModalProps> = (props) => {
 
   const { user } = useContext(authContext);
 
+  /**
+   * This function handles the creation of a new task and resets the form fields.
+   *
+   * @param {Object} values - An object representing a new task.
+   * @returns {Promise<void>} - A Promise that resolves when the task is created successfully.
+   */
   const handleCreateTask = async (values: any) => {
     await createTask(
       props.projectId,
@@ -30,6 +45,11 @@ export const CreateTaskModalComponent: FC<CreateTaskModalProps> = (props) => {
     props.onCreate();
   };
 
+  /**
+   * Render a form to create a new task with the necessary input fields and a submit button.
+   *
+   * @returns {JSX.Element} - A React JSX element.
+   */
   return (
     <Form form={createTaskForm} onFinish={handleCreateTask} layout="vertical">
       <Form.Item

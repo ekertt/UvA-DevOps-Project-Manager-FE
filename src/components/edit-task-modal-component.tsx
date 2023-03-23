@@ -1,3 +1,6 @@
+/**
+ * A React functional component that renders a form to edit a task of a project.
+ */
 import { FC, useContext, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import { TaskModel } from '../models/task-model';
@@ -10,6 +13,12 @@ interface EditTaskModalProps {
   onUpdate: () => void;
 }
 
+/**
+ * The EditTaskModalComponent is a functional component that renders a form to create a new project.
+ *
+ * @param {EditTaskModalProps} props - Props passed to this component.
+ * @returns {JSX.Element} - A React JSX element.
+ */
 export const EditTaskModalComponent: FC<EditTaskModalProps> = (props) => {
   const [isUploading, setUploading] = useState<boolean>(false);
 
@@ -18,6 +27,11 @@ export const EditTaskModalComponent: FC<EditTaskModalProps> = (props) => {
   const { user } = useContext(authContext);
   const { project_id } = useParams<{ project_id: string }>();
 
+  /**
+   * This function handles the update of an existing task and resets the form fields.
+   *
+   * @param task - The task being updated
+   */
   const handleUpdateTask = async (task: TaskModel) => {
     setUploading(true);
 
@@ -29,6 +43,11 @@ export const EditTaskModalComponent: FC<EditTaskModalProps> = (props) => {
     setUploading(false);
   };
 
+  /**
+   * Render a form to edit an existing task with the necessary input fields and a submit button.
+   *
+   * @returns {JSX.Element} - A React JSX element.
+   */
   return (
     <Form
       form={editForm}

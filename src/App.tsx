@@ -14,15 +14,28 @@ import { TitleComponent } from './components/title-component';
 
 const { Header, Content } = Layout;
 
+/**
+ * The main App component that serves as the entry point of the application.
+ */
 const App: FC = () => {
   const [user, setUser] = useState<SignInUserSessionModel | undefined>(
     undefined
   );
 
+  /**
+   * Extracts the first letter of the user's first name.
+   * @param user - The signed-in user object.
+   * @returns The first letter of the user's first name as a string.
+   */
   const parseNameFirstLetter = (user: SignInUserSessionModel): string => {
     return user.idToken.payload.given_name.charAt(0) || '';
   };
 
+  /**
+   * Constructs the user's full name from their first and last name.
+   * @param user - The signed-in user object.
+   * @returns The user's full name as a string.
+   */
   const parseName = (user: SignInUserSessionModel): string => {
     const name = user.idToken.payload.given_name;
     const familyName = user.idToken.payload.family_name;
